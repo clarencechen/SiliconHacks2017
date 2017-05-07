@@ -13,7 +13,7 @@ var personality_insights = new PersonalityInsightsV3({
   version_date: '2017-12-31'
 });
 
-var twitter = require('twitter.js');
+var twitter = require('./twitter.js');
 
 var vQue = [];
 var tQue = [];
@@ -54,7 +54,7 @@ exports.get_user = function(req, res) {
 
 //
 exports.get_match_video = function(req, res) {
-  
+
 if (vQue.length === 0)
 {
   var usr = req.body.user;

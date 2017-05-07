@@ -19,6 +19,8 @@
   "dependencies": {
     "body-parser": "^1.17.1",
     "cloudant": "^1.7.1",
-    "express": "^4.15.2"
+    "express": "^4.15.2",
+    "twitter": "^1.7.0",
+    "watson-developer-cloud": "^2.31.1"
   }
 }
