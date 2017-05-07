@@ -13,7 +13,7 @@ var personality_insights = new PersonalityInsightsV3({
   version_date: '2017-12-31'
 });
 
-var twitter = require('../twitter.js');
+var twitter = require('twitter.js');
 
 var vQue = [];
 var tQue = [];
