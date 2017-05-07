@@ -12,12 +12,15 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-
+const consumer = 'kB24rJmyvMQ7E8vPwp00TUXaJ'
+const consumer_secret = 'QxWNsqMZbTKVcBDikbuFa5J2qMf3aQRgzZVFFVgLYwJBHpQQv7'
+const access_token = '80007743-NPiZx3QgvYG1mPb3mnCgcm9LHoY4IJK45lnCHbO8O'
+const access_secret = 'vJcm11ZWNK0WljHUiLstM3wM2dtuNd8LGPITuU2zhfmy7'
 const twitter = require('twitter');
 const MAX_COUNT = 200;
 
 const tweetsFor = (user) =>
-  require(`../public/data/twitter/${user.userId}_tweets.json`);
+  require(`../public/data/twitter/${user}_tweets.json`);
 
 const getLocalTweets = (user) =>
   new Promise((resolve) => {
@@ -35,13 +38,16 @@ const getLocalTweets = (user) =>
 */
 const getTweetsFromTwitter = (user) =>
   new Promise((resolve, reject) => {
-    if (!user || !user.credentials) {
-      return reject(new Error('User credentials cannot be null'));
+    if (!user) {
+      return reject(new Error('User handle cannot be null'));
     }
-    const twit = new twitter(user.credentials);
+    const twit = new twitter({consumer_key: consumer,
+      consumer_secret: consumer_secret,
+      access_token_key: access_token,
+      access_token_secret: access_secret});
     let tweets = [];
     const params = {
-      screen_name: user.userId,
+      screen_name: user,
       count: MAX_COUNT,
       exclude_replies: true,
       trim_user: true
