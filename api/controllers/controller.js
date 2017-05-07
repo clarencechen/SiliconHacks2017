@@ -107,7 +107,7 @@ exports.watson = function(req, res){
     for(var t of tweetarr)
 >>>>>>> 1adc743 (bug fix)
       corpus += t.text + '\n'
-    }
+
     var params = {
     // Get the content items from the JSON file.
     text : corpus,
