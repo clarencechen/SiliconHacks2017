@@ -1,0 +1,5 @@
+Access Token	80007743-NPiZx3QgvYG1mPb3mnCgcm9LHoY4IJK45lnCHbO8O
+Access Token Secret	vJcm11ZWNK0WljHUiLstM3wM2dtuNd8LGPITuU2zhfmy7
+Access Level	Read and write
+Owner	hohoroboto
+Owner ID	80007743
