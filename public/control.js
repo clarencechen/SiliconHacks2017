@@ -1,71 +1,11 @@
 // https://github.com/peers/peerjs.git
 var mediapromise = null;
-
+var peer;
 var g_id;
+var connectedPeers = {};
 // Connect to PeerJS, have server assign an ID instead of providing one
 // Showing off some of the configs available with PeerJS :).
-var peer = new Peer({
-  // Set API key for cloud server (you don't need this if you're running your
-  // own.
-  key: 'gme13yv5bvvon7b9',
 
-  // Set highest debug level (log everything!).
-  debug: 1,
-
-  // Set a logging function:
-  logFunction: function() {
-    var copy = Array.prototype.slice.call(arguments).join(' ');
-    $('.log').append(copy + '<br>');
-  }
-});
-var connectedPeers = {};
-
-// Show this peer's ID.
-peer.on('open', function(id){
-  g_id = id;
-  var usr = window.localStorage.username;
-  console.log(usr);
-  $.ajax({
-    type: 'POST',
-    url: 'http://localhost:3000/match_text/',
-    data:{
-      peer: g_id,
-      user: usr
-    },
-    success: function(data){
-      console.log(data);
-          var requestedPeer = data['peer'];
-    if (!connectedPeers[requestedPeer]) {
-      // Create 2 connections, one labelled chat and another labelled file.
-      var c = peer.connect(requestedPeer, {
-        label: 'chat',
-        serialization: 'none',
-        metadata: {message: 'hi i want to chat with you!'}
-      });
-      c.on('open', function() {
-        connect(c);
-      });
-      c.on('error', function(err) { alert(err); });
-      var f = peer.connect(requestedPeer, { label: 'file', reliable: true });
-      f.on('open', function() {
-        connect(f);
-      });
-      f.on('error', function(err) { alert(err); });
-    }
-    connectedPeers[requestedPeer] = 1;
-  },
-  error: function(err){
-    console.log("Failed to match");
-  }
-  });
-});
-
-// Await connections from others
-peer.on('connection', connect);
-peer.on('call', answer);
-peer.on('error', function(err) {
-  console.log(err);
-})
 
 // Handle a connection object.
 function connect(c) {
@@ -277,7 +217,75 @@ $(document).ready(function() {
     });
   }
 
+});// Document ready
+
+
+
+
+function onmatch()
+{
+  peer = new Peer({
+  // Set API key for cloud server (you don't need this if you're running your
+  // own.
+  key: 'gme13yv5bvvon7b9',
+
+  // Set highest debug level (log everything!).
+  debug: 1,
+
+  // Set a logging function:
+  logFunction: function() {
+    var copy = Array.prototype.slice.call(arguments).join(' ');
+    $('.log').append(copy + '<br>');
+  }
 });
+
+
+// Show this peer's ID.
+peer.on('open', function(id){
+  g_id = id;
+  var usr = window.localStorage.username;
+  console.log(usr);
+  $.ajax({
+    type: 'POST',
+    url: 'http://localhost:3000/match_text/',
+    data:{
+      peer: g_id,
+      user: usr
+    },
+    success: function(data){
+      console.log(data);
+          var requestedPeer = data['peer'];
+    if (!connectedPeers[requestedPeer]) {
+      // Create 2 connections, one labelled chat and another labelled file.
+      var c = peer.connect(requestedPeer, {
+        label: 'chat',
+        serialization: 'none',
+        metadata: {message: 'hi i want to chat with you!'}
+      });
+      c.on('open', function() {
+        connect(c);
+      });
+      c.on('error', function(err) { alert(err); });
+      var f = peer.connect(requestedPeer, { label: 'file', reliable: true });
+      f.on('open', function() {
+        connect(f);
+      });
+      f.on('error', function(err) { alert(err); });
+    }
+    connectedPeers[requestedPeer] = 1;
+  },
+  error: function(err){
+    console.log("Failed to match");
+  }
+  });
+});
+
+// Await connections from others
+peer.on('connection', connect);
+peer.on('call', answer);
+peer.on('error', function(err) {
+  console.log(err);
+})
 
 // Make sure things clean up properly.
 
@@ -286,3 +294,7 @@ window.onunload = window.onbeforeunload = function(e) {
     peer.destroy();
   }
 };
+
+}
+
+
