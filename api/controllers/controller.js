@@ -97,27 +97,29 @@ exports.get_match_text = function(req, res){
 };
 
 exports.watson = function(req, res){
-  var tweetarr = twitter.getTweets(req.body.twitter);
-  var corpus = JSON.stringify(tweetarr).replace('","', '\n')
-  var params = {
-  // Get the content items from the JSON file.
-  text : corpus,
-  headers: {
-    'accept-language': 'en',
-    'accept': 'application/json',
-    'consumption_preferences' : true
-  }
-  };
-  personality_insights.profile(params, function(error, response) {
-    if (error)
-      console.log('Error:', error);
-    else
-    {
-      console.log('done!');
-      var hobbies = process(response)
-      res.json(hobbies)
+  var promise = twitter.getTweets(req.body.twitter);
+  promise.then(function(tweetarr){
+    var corpus = JSON.stringify(tweetarr).replace('","', '\n')
+    var params = {
+    // Get the content items from the JSON file.
+    text : corpus,
+    headers: {
+      'accept-language': 'en',
+      'accept': 'application/json',
+      'consumption_preferences' : true
     }
-  });
+    };
+    personality_insights.profile(params, function(error, response) {
+      if (error)
+        console.log('Error:', error);
+      else
+      {
+        console.log('done!');
+        var hobbies = process(response)
+        res.json(hobbies)
+      }
+    });
+  })
 }
 function process(response) {
   var hobbies = []
