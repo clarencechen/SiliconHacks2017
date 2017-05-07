@@ -19,7 +19,8 @@ var LanguageTranslatorV2 = require('watson-developer-cloud/language-translator/v
 var language_translator = new LanguageTranslatorV2({
   username: "93e6cb64-66d2-4cc0-8985-820705f4a9e7",
   password: "d23FHCpyRFsb",
-  url: 'https://gateway.watsonplatform.net/language-translator/api/'
+  url: 'https://gateway.watsonplatform.net/language-translator/api/',
+  version: 'v2'
 });
 
 var twitter = require('./twitter.js');
@@ -148,7 +149,7 @@ function process(response) {
 exports.translate = function(req, res){
   data = req.body;
   language_translator.translate({
-  text: data.text, source : data.source, target: data.target },
+  text: data.text, source : data.source, target: 'cn' },
   function (err, translation) {
     if (err)
       console.log('error:', err);

@@ -11,7 +11,7 @@ var lang;
 function connect(c) {
   // Handle a chat connection.
   if (c.label === 'chat') {
-    lang = c.metadata;
+    lang = c.metadata.language;
     console.log(lang);
 
     var chatbox = $('<div></div>').addClass('connection').addClass('active').attr('id', c.peer);
