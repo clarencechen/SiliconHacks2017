@@ -281,7 +281,7 @@ peer.on('open', function(id){
     type: 'POST',
     url: 'http://localhost:3000/watson/',
     data:{
-      twitter : twi
+      twitter : window.localStorage.twitter;
           },
     success: function(data){
       console.log(data);
