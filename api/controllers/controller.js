@@ -99,7 +99,9 @@ exports.get_match_text = function(req, res){
 exports.watson = function(req, res){
   var promise = twitter.getTweets(req.body.twitter);
   promise.then(function(tweetarr){
-    var corpus = JSON.stringify(tweetarr).replace('","', '\n')
+    var corpus = ''
+    for(var t : tweetarr)
+      corpus += t.text + '\n'
     var params = {
     // Get the content items from the JSON file.
     text : corpus,
