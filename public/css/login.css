@@ -167,10 +167,11 @@ h1#name {
 {
     from {
         left: -100px;
-        bottom: -1000px;
+        bottom: -100px;
     }
     to {
         left: calc( 100% + 100px );
+        bottom: calc(100% + 100px);
     }
 }
 
