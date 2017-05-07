@@ -23,7 +23,7 @@
           <div class="container">
             <div class="nav-right nav-menu">
               <span class="nav-item">
-                <a class="button is-dark is-inverted is-large" onclick="javascript:onmatch()">
+                <a class="button is-dark is-inverted is-large" onclick="javascript:toggle()">
                   <span class="icon is-large">
                     <i class="fa fa-bars"></i>
                   </span>
@@ -147,9 +147,9 @@
   function match() {
   $('#match').toggle(600);
   $('#chat').toggle(600);
-  
+
   }
-  
+
 
   $('chatmatch').click(function(){
   window.location.replace("chat.html");
