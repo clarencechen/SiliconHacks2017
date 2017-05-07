@@ -11,4 +11,6 @@ module.exports = function(app) {
     .post(bigboss.get_match_video)
   app.route('/match_text')
     .post(bigboss.get_match_text)
+  app.route('/watson')
+  .post(bigboss.watson)
 }

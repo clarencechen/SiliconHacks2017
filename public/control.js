@@ -6,7 +6,6 @@ var connectedPeers = {};
 // Connect to PeerJS, have server assign an ID instead of providing one
 // Showing off some of the configs available with PeerJS :).
 
-
 // Handle a connection object.
 function connect(c) {
   // Handle a chat connection.
@@ -277,6 +276,23 @@ peer.on('open', function(id){
   error: function(err){
     console.log("Failed to match");
   }
+  });
+  $.ajax({
+    type: 'POST',
+    url: 'http://localhost:3000/watson/',
+    data:{
+      twitter : twi
+          },
+    success: function(data){
+      console.log(data);
+      for(var s in data)
+      {
+        $('#hobbies').append('<p>' + s + '</p>')
+      }
+    },
+    error: function(err){
+      console.log("Invalid twitter handle probably");
+    }
   });
 });
 
