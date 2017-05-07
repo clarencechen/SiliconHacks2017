@@ -8,6 +8,7 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.1.4/js.cookie.min.js"></script>
+    <script src="./js/peer.min.js"></script>
 
     <script src="control.js"></script>
 
@@ -42,6 +43,30 @@
           <h2 class="subtitle">
             Click to match with another earthling.
           </h2>
+          <div id="actions">
+            Your PeerJS ID is <span id="pid"></span><br>
+            Connect to a peer: <input type="text" id="rid" placeholder="Someone else's id"><input class="button" type="button" value="Connect" id="connect"><br><br>
+
+            <form id="send">
+              <input type="text" id="text" placeholder="Enter message"><input class="button" type="submit" value="Send to selected peers">
+            </form>
+            <button id="close">Close selected connections</button>
+          </div>
+
+          <div id="wrap"><div id="connections"><span class="filler">You have not yet
+                made any connections.</span></div>
+            <div class="clear"></div></div>
+
+          <div id="box" style="background: #fff; font-size: 18px;padding:40px 30px; text-align: center;">
+
+          </div>
+          <div id="video">
+            <video autoplay></video>
+            <input type="checkbox" name="Audio Only" id="novideo">Audio Only
+            <input type="checkbox" name="Mute" id="mute">Mute
+            <button id='call'>videocall</button>
+          </div>
+
         </div>
       </div>
 
@@ -61,72 +86,73 @@
             <thead>
               <th>Name</th>
               <th id="name"></th>
-              </thead>
-              <tbody>
-                  <td>Age</td>
-                  <td id="age"></td>
-                </tr>
-                <tr>
-                  <td>Country</td>
-                  <td id="country"></td>
-                </tr>
-                <tr>
-                  <td>Ethnicity</td>
-                  <td id="ethnicity"></td>
-                </tr>
-                <tr>
-                  <td>Gender</td>
-                  <td id="gender"></td>
-                </tr>
-                <tr>
-                  <td>Religion</td>
-                  <td id="religion"></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </section>
-      </div>
-    </div>
-
-    
-    <!-- <div align="center"> -->
-    <!--   <button id="chatmatch">Find A Chat Match</button> -->
-    <!--   <button id="videomatch">Find A Video Match</button> -->
-    <!-- </div> -->
-    <script>
-      var isToggled = false;
-      /* Open the sidenav */
-      function toggle() {
-      console.log(isToggled)
-      if (isToggled) {
-      isToggled = false;
-      document.getElementById("sidebar").style.right = "-100%";
-      } else {
-      isToggled = true;
-      document.getElementById("sidebar").style.right = "0";
-      }
-      }
-
-      // Populate bio
-      document.getElementById("name").innerHTML = window.localStorage.getItem('first') + " " + window.localStorage.getItem('last');
-      document.getElementById("age").innerHTML = window.localStorage.getItem('Age');
-      document.getElementById("country").innerHTML = window.localStorage.getItem('Country');
-      document.getElementById("ethnicity").innerHTML = window.localStorage.getItem('Ethnicity');
-      document.getElementById("gender").innerHTML = window.localStorage.getItem('Gender');
-      document.getElementById("religion").innerHTML = window.localStorage.getItem('Religion');
+            </thead>
+            <tbody>
+              <td>Age</td>
+              <td id="age"></td>
+</tr>
+<tr>
+  <td>Country</td>
+  <td id="country"></td>
+</tr>
+<tr>
+  <td>Ethnicity</td>
+  <td id="ethnicity"></td>
+</tr>
+<tr>
+  <td>Gender</td>
+  <td id="gender"></td>
+</tr>
+<tr>
+  <td>Religion</td>
+  <td id="religion"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</div>
+</div>
 
 
+<!-- <div align="center"> -->
+<!--   <button id="chatmatch">Find A Chat Match</button> -->
+<!--   <button id="videomatch">Find A Video Match</button> -->
+<!-- </div> -->
+<script>
+  var isToggled = false;
+  /* Open the sidenav */
+  function toggle() {
+  console.log(isToggled)
+  if (isToggled) {
+  isToggled = false;
+  document.getElementById("sidebar").style.right = "-100%";
+  } else {
+  isToggled = true;
+  document.getElementById("sidebar").style.right = "0";
+  }
+  }
 
-      $('chatmatch').click(function(){
-      window.location.replace("chat.html");
-      });
-      $('#videomatch').click(function(){
-      window.location.replace("video.html");
-      });
-      var user = Cookies.getJSON('user');
-      console.log(user);
-    </script>
-  </body>
+  // Populate bio
+  document.getElementById("name").innerHTML = window.localStorage.getItem('first') + " " + window.localStorage.getItem('last');
+  document.getElementById("age").innerHTML = window.localStorage.getItem('Age');
+  document.getElementById("country").innerHTML = window.localStorage.getItem('Country');
+  document.getElementById("ethnicity").innerHTML = window.localStorage.getItem('Ethnicity');
+  document.getElementById("gender").innerHTML = window.localStorage.getItem('Gender');
+  document.getElementById("religion").innerHTML = window.localStorage.getItem('Religion');
+
+
+  
+
+  $('chatmatch').click(function(){
+  window.location.replace("chat.html");
+  });
+  $('#videomatch').click(function(){
+  window.location.replace("video.html");
+  });
+  var user = Cookies.getJSON('user');
+  console.log(user);
+</script>
+</body>
 
 </html>
