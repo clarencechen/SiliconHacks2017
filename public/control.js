@@ -61,11 +61,6 @@ function connect(c) {
         connect(c);
       });
       c.on('error', function(err) { alert(err); });
-      var f = peer.connect(requestedPeer, { label: 'file', reliable: true });
-      f.on('open', function() {
-        connect(f);
-      });
-      f.on('error', function(err) { alert(err); });
     }
     connectedPeers[requestedPeer] = 1;
   },
@@ -99,17 +94,6 @@ function connect(c) {
 
         }
         delete connectedPeers[c.peer];
-    });
-  } else if (c.label === 'file') {
-    c.on('data', function(data) {
-      // If we're getting a file, create a URL for it.
-      if (data.constructor === ArrayBuffer) {
-        var dataView = new Uint8Array(data);
-        var dataBlob = new Blob([dataView]);
-        var url = window.URL.createObjectURL(dataBlob);
-        $('#' + c.peer).find('.messages').append('<div><span class="file">' +
-            c.peer + ' has sent you a <a target="_blank" href="' + url + '">file</a>.</span></div>');
-      }
     });
   }
   connectedPeers[c.peer] = 1;
@@ -223,11 +207,6 @@ $(document).ready(function() {
         connect(c);
       });
       c.on('error', function(err) { alert(err); });
-      var f = peer.connect(requestedPeer, { label: 'file', reliable: true });
-      f.on('open', function() {
-        connect(f);
-      });
-      f.on('error', function(err) { alert(err); });
     }
     connectedPeers[requestedPeer] = 1;
   });
@@ -325,11 +304,6 @@ peer.on('open', function(id){
         connect(c);
       });
       c.on('error', function(err) { alert(err); });
-      var f = peer.connect(requestedPeer, { label: 'file', reliable: true });
-      f.on('open', function() {
-        connect(f);
-      });
-      f.on('error', function(err) { alert(err); });
     }
     connectedPeers[requestedPeer] = 1;
   },
