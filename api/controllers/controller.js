@@ -1,4 +1,6 @@
 'use strict';
+var fs = require('fs');
+var cfg = JSON.parse(fs.readFileSync('./cfg.json', 'utf8'));
 // load the Cloudant library
 var cloudantURL = "https://azincencorrioduchignoody:7d392fbae6755d3aab27bdb441c2b6a1ae879194@38255844-f351-4ae0-9d53-5774023e3cf4-bluemix.cloudant.com"
 var Cloudant = require('cloudant'),
@@ -9,16 +11,16 @@ var Cloudant = require('cloudant'),
 
 var PersonalityInsightsV3 = require('watson-developer-cloud/personality-insights/v3');
 var personality_insights = new PersonalityInsightsV3({
-  username: "93e6cb64-66d2-4cc0-8985-820705f4a9e7",
-  password: "d23FHCpyRFsb",
+  username: cfg.PERSONALITY_USER,
+  password: cfg.PERSONALITY_PSWD,
   version_date: '2017-12-31'
 });
 
 var twitter = require('./twitter.js');
 var LanguageTranslatorV2 = require('watson-developer-cloud/language-translator/v2');
 var language_translator = new LanguageTranslatorV2({
-  username: "a03a2498-c521-4144-9cd7-fb4ad4d615d3",
-  password: "klN6dDqw8oIA",
+  username: cfg.TRANSLATE_USER,
+  password: cfg.TRANSLATE_PSWD,
   url: 'https://gateway.watsonplatform.net/language-translator/api/',
   version: 'v2'
 });
