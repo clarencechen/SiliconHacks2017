@@ -8,7 +8,7 @@
     <link rel="stylesheet" id="bulma" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.3.2/css/bulma.min.css" />
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.1.4/js.cookie.min.js"></script>
+    <script src="login.js"></script>
     <link rel="stylesheet" type="text/css" href="./css/login.css">
   </head>
 
@@ -46,13 +46,13 @@
                       </span>
                     </p>
                     <p class="control login">
-                      <button onclick="javascript:login()" class="button is-info is-outlined is-large is-fullwidth">Login</button>
+                      <button id="login" class="button is-info is-outlined is-large is-fullwidth">Login</button>
                     </p>
                   </div>
                   <div class="section forgot-password">
                     <p class="has-text-centered">
                       <a href="#">Forgot password</a>
-                      <a href="#">Need help?</a>
+                      <a href="account.html">Don't have an account?</a>
                     </p>
                   </div>
                 </div>
@@ -65,7 +65,6 @@
 
     <script type="text/javascript">
       var isToggled = false;
-      var serverUrl = "https://cit-i-zen.herokuapp.com:443/user";
       /* Open the sidenav */
       function toggle() {
       console.log(isToggled)
@@ -75,46 +74,6 @@
       } else {
       isToggled = true;
       document.getElementById("login-form").style.right = "0";
-      }
-      }
-
-      function login() {
-      var client = new HttpClient();
-      var params = "/";
-      params += document.getElementById('username').value;
-      params += "/"
-      params += document.getElementById('password').value;
-      console.log(params);
-      client.get(serverUrl + params, function(err, data) {
-      if(err)
-      {
-      console.log(err);
-      }
-      else
-      {
-      console.log("successful login!");
-      console.log(data);
-      for(var prop in data.docs[0])
-      window.localStorage.setItem(prop, data.docs[0][prop])
-      window.location.replace("index.html");
-      }
-      })
-      }
-
-      var HttpClient = function() {
-      this.get = function(aUrl, callback) {
-      var xhr = new XMLHttpRequest();
-      xhr.open("GET", aUrl, true);
-      xhr.responseType = 'json';
-      xhr.onload = function() {
-      var status = xhr.status;
-      if (status == 200) {
-      callback(null, xhr.response);
-      } else {
-      callback(status);
-      }
-      };
-      xhr.send();
       }
       }
 

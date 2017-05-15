@@ -1,5 +1,8 @@
 # dependencies
 node_modules/**
 
+# secret
+#i give up, .env
+
 # misc
 .DS_Store

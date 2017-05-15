@@ -1,6 +1,5 @@
-var mediapromise = null;
-var peer;
-var g_id;
+var socket = io();
+//var socket = io.connect("/regular");
 var connectedPeers = {};
 var lang;
 //redirect if not logged in
@@ -8,232 +7,101 @@ if(window.localStorage.getItem('_id') === null)
 {
   window.location.replace('login.html');
 }
-// https://github.com/peers/peerjs.git
-// Connect to PeerJS, have server assign an ID instead of providing one
-// Showing off some of the configs available with PeerJS :).
-// Handle a connection object.
-function connect(c) {
-  // Handle a chat connection.
-  if (c.label === 'chat') {
-    lang = c.metadata.language;
-    console.log(lang);
 
-    var chatbox = $('<div></div>').addClass('connection').addClass('active').attr('id', c.peer);
-    var header = $('<h1></h1>').html('Chat with <strong>' + c.peer + '</strong>');
-    var messages = $('<div><em>Peer connected.</em></div>').addClass('messages');
-    chatbox.append(header);
-    chatbox.append(messages);
+$(document).ready(function() {
+  //open a connection
+  $('#connect').on('click', function(event) {
+    socket.open()
+    console.log('opening connection');
+    var usrdata = 
+    {
+      socketid: socket.id,
+      user: window.localStorage.getItem('username'),
+      age: window.localStorage.getItem('Age'),
+      ethnicity: window.localStorage.getItem('Ethnicity'),
+      gender: window.localStorage.getItem('Gender'),
+      religion: window.localStorage.getItem('Religion'),
+      orientation: window.localStorage.getItem('Sexual Orientation')
+    };
+    $('#connect').prop('disabled', true)
+    $.ajax({
+      type: 'POST',
+      url: 'https://cit-i-zen.herokuapp.com:443/match_text/',
+      data: usrdata,
+      success: function(match){
+        console.log('matched with ' + match.id);        
+        var requested = match.id;
+        if (!connectedPeers[requested]) {
+          socket.emit('room', {id : requested, lang : window.localStorage.language})
+          enableFeatures();
+        }
+      },
+      error: function(err){
+        console.log(JSON.stringify(err))
+        if(err.status == '500')
+        {
+          $('#connect').text('Waiting for connection')
+        }
+      }
+    });
+    
+    // Await connections from others
+    socket.on('join', function(data) {
+      socket.emit('join', {room : data.room, lang : window.localStorage.language})
+      enableFeatures()
+      setUpChatBox(data.id, data.lang)
+    })
+    socket.on('joined', function(data) {
+      setUpChatBox(data.id, data.lang)
+    })
+    
+    // Close connections.
+    $('#close').click(function() {
+      if(peer)
+      {
+        peer.destroy();
+      }
 
-    // Select connection handler.
-    chatbox.on('click', function() {
+      socket.close();
+    });
+    // Call a peer
+    $('#call').on('click', function(event) {
+      eachActiveConnection(call);
+    })
+    // Send a chat message to all active connections.
+    $('#send').on('click', function(e) {
+      e.preventDefault();
+      // For each active connection, send the message.
+      var msg = $('#text').val();
+      if(msg)
+      {
+        eachActiveConnection(function(peerId, $c) {
+          socket.emit('chat', {id: socket.id, text: msg})
+          $c.find('.messages').append('<div><span class="you">You: </span>' + msg
+            + '</div>');
+        });
+        $('#text').val('');
+        $('#text').focus();
+      }
+    });
+    $('.connection').on('click', function() {
       if ($(this).attr('class').indexOf('active') === -1) {
         $(this).addClass('active');
       } else {
         $(this).removeClass('active');
       }
     });
-    $('#connections').append(chatbox);
-    // Call a Peer
-    $('#call').click(function() {
-      call(c.peer)
-    })
-    c.on('data', function(data) {
-      var tran;
-      messages.append('<div><span class="peer">' + c.peer + '</span>: ' + data +
-        '</div>');
-
-          $.ajax({
-    type: 'POST',
-    url: 'http://localhost:3000/match_text/',
-    data:{
-      text: data,
-      target: window.localStorage.language,
-      source: lang
-    },
-    success: function(data){
-      console.log(data);
-          var requestedPeer = data['peer'];
-    if (!connectedPeers[requestedPeer]) {
-      // Create 2 connections, one labelled chat and another labelled file.
-      var c = peer.connect(requestedPeer, {
-        label: 'chat',
-        serialization: 'none',
-        metadata: {message: 'hi YDD',
-      language: window.localStorage.language}
-      });
-      c.on('open', function() {
-        connect(c);
-      });
-      c.on('error', function(err) { alert(err); });
-    }
-    connectedPeers[requestedPeer] = 1;
-  },
-  error: function(err){
-    console.log("Failed to match");
+  });
+  //Initializes Chatbox
+  function setUpChatBox(target, language) {
+    lang = language;
+    var chatbox = $('#message').addClass('connection').addClass('active').attr('id', target);
+    var header = $('<h1></h1>').html('Chat with <strong>' + target + '</strong>');
+    var messages = $('<div><em>Peer connected.</em></div>').addClass('messages');
+    chatbox.append(header);
+    chatbox.append(messages);
+    connectedPeers[target] = true;
   }
-  });
-  $.ajax({
-    type: 'POST',
-    url: 'http://localhost:3000/watson/',
-    data:{
-      twitter : window.localStorage.twitter
-          },
-    success: function(data){
-      console.log(data);
-      for(var s in data)
-      {
-        $('#hobbies').append('<p>' + s + '</p>')
-      }
-    },
-    error: function(err){
-      console.log("Invalid twitter handle probably");
-    }
-  });
-});
-
-    c.on('close', function() {
-        alert(c.peer + ' has left the chat.');
-        chatbox.remove();
-        if ($('.connection').length === 0) {
-
-        }
-        delete connectedPeers[c.peer];
-    });
-  }
-  connectedPeers[c.peer] = 1;
-}
-
-function display(remote) {
-  var video = document.querySelector('video');
-  video.srcObject = remote;
-  video.onloadedmetadata = function(e) {video.play();}
-}
-
-function call(peerid) {
-  if(mediapromise !== null)
-  {
-    console.log("already in call")
-    return;
-  }
-  console.log("prepare for call")
-  mediapromise = navigator.mediaDevices.getUserMedia({audio : true, video : true});
-  mediapromise.then(function(stream) {
-    stream.getVideoTracks()[0].enabled = !$('#novideo').checked;
-    stream.getAudioTracks()[0].enabled = !$('#mute').checked;
-    $('#call').attr('disabled', 'disabled')
-    $('#call').text("calling...")
-    var call = peer.call(peerid, stream);
-    call.on('err', function(err) {
-      console.log(err);
-      $('#call').attr('disabled', 'disabled')
-      $('#call').text("can't call")
-    })
-    call.on('stream', function(remote) {
-      if($('#call').attr('disabled') == 'disabled')
-      {
-        $('#call').text('end call')
-        $('#call').removeAttr('disabled')
-      }
-      display(remote);
-    })
-    $('body').on('click', '#call', function(e) {
-      call.close()
-    })
-    call.on('close', function() {
-      $('#call').text("call ended")
-      $('#call').attr('disabled', 'disabled')
-      mediapromise = null
-    })
-    $('#novideo').change(function(e) {
-      stream.getVideoTracks()[0].enabled = !this.checked;
-    })
-    $('#mute').change(function(e) {
-      stream.getAudioTracks()[0].enabled = !this.checked;
-    })
-    setTimeout(function() {
-      if(!call.open)
-      {
-        $('#call').attr('disabled', 'disabled')
-        $('#call').text("didnt pick up")
-      }
-    }, 10000)
-
-  })
-}
-
-function answer(call) {
-  console.log('receiving call')
-  mediapromise = navigator.mediaDevices.getUserMedia({audio : true, video : true});
-  mediapromise.then(function(stream) {
-    stream.getVideoTracks()[0].enabled = !$('#novideo').checked;
-    stream.getAudioTracks()[0].enabled = !$('#mute').checked;
-    // Answer the call, providing our MediaStream
-    call.answer(stream);
-    $('#call').text('end call');
-    call.on('stream', function(remote) {
-    // `stream` is the MediaStream of the remote peer.
-    // Here you'd add it to an HTML video/canvas element.
-      display(remote);
-    })
-    $('body').on('click', '#call', function(e) {
-      call.close()
-    })
-    call.on('close', function() {
-      $('#call').text("call ended")
-      $('#call').attr('disabled', 'disabled')
-      mediapromise = null
-    })
-    $('#novideo').change(function(e) {
-      stream.getVideoTracks()[0].enabled = !this.checked;
-    })
-    $('#mute').change(function(e) {
-      stream.getAudioTracks()[0].enabled = !this.checked;
-    })
-  })
-}
-
-$(document).ready(function() {
-  // Connect to a peer
-  $('#notconnected').click(function() {
-    var requestedPeer = $('#rid').val();
-    if (!connectedPeers[requestedPeer]) {
-      // Create 2 connections, one labelled chat and another labelled file.
-      var c = peer.connect(requestedPeer, {
-        label: 'chat',
-        serialization: 'none',
-        metadata: {message: 'hi i want to chat with you!',
-      language: window.localStorage.language}
-      });
-      c.on('open', function() {
-        connect(c);
-      });
-      c.on('error', function(err) { alert(err); });
-    }
-    connectedPeers[requestedPeer] = 1;
-  });
-  // Close a connection.
-  $('#close').click(function() {
-    eachActiveConnection(function(c) {
-      c.close();
-    });
-  });
-
-  // Send a chat message to all active connections.
-  $('#send').submit(function(e) {
-    e.preventDefault();
-    // For each active connection, send the message.
-    var msg = $('#text').val();
-    eachActiveConnection(function(c, $c) {
-      if (c.label === 'chat') {
-        c.send(msg);
-        $c.find('.messages').append('<div><span class="you">You: </span>' + msg
-          + '</div>');
-      }
-    });
-    $('#text').val('');
-    $('#text').focus();
-  });
-
   // Goes through each active peer and calls FN on its connections.
   function eachActiveConnection(fn) {
     var actives = $('.active');
@@ -242,109 +110,138 @@ $(document).ready(function() {
       var peerId = $(this).attr('id');
 
       if (!checkedIds[peerId]) {
-        var conns = peer.connections[peerId];
-        for (var i = 0, ii = conns.length; i < ii; i += 1) {
-          var conn = conns[i];
-          fn(conn, $(this));
-        }
+        var connected = connectedPeers[peerId];
+        if(connected)
+          fn(peerId, $(this));
       }
-
-      checkedIds[peerId] = 1;
+      checkedIds[peerId] = true;
     });
   }
 
+  $('#match').click(function(e) {
+    findmatch();
+  });
 });// Document ready
 
+function enableFeatures() {
+  $('#connect').text('Connection Found')
+  $('#connect').prop('disabled', true)
+  $('#close').removeProp('disabled')
+  $('#close').text('Close Connection') 
+  $('#call').removeProp('disabled')
+  $('#call').text('Videocall')
+  $('#send').removeProp('disabled')
+  $('#send').text('Send Message')
+}
+
+
+function disableFeatures() {
+  $('#call').prop('disabled', true)
+  $('#call').text('Connect First before calling')
+  $('#send').prop('disabled', true)
+  $('#send').text('Connect First before messaging')
+  $('#close').prop('disabled', true)
+  $('#close').text('No Connections to Close') 
+  $('#connect').removeProp('disabled')
+  $('#connect').text('Connect')
+}
 
 
 
-function onmatch()
-{
-  peer = new Peer({
-  // Set API key for cloud server (you don't need this if you're running your
-  // own.
-  key: 'gme13yv5bvvon7b9',
-
-  // Set highest debug level (log everything!).
-  debug: 1,
-
-  // Set a logging function:
-  logFunction: function() {
-    var copy = Array.prototype.slice.call(arguments).join(' ');
-    $('.log').append(copy + '<br>');
-  }
-});
-
-
-// Show this peer's ID.
-peer.on('open', function(id){
-  alert('stuff is obtained');
-  g_id = id;
-  var usr = window.localStorage.username;
-  $('#hobbies').append('<p>Analyzing twitter accounts...</p>')
-  console.log(usr);
+function findmatch() {
+  disableFeatures();
+  $('#match').prop('disabled', true)
+  //output twitter data
+  $('#hobbies').html('<p>Analyzing twitter accounts...</p>')
   $.ajax({
     type: 'POST',
-    url: 'http://localhost:3000/match_text/',
-    data:{
-      peer: g_id,
-      user: usr
-    },
-    success: function(data){
-      console.log(data);
-          var requestedPeer = data['peer'];
-    if (!connectedPeers[requestedPeer]) {
-      // Create 2 connections, one labelled chat and another labelled file.
-      var c = peer.connect(requestedPeer, {
-        label: 'chat',
-        serialization: 'none',
-        metadata: {message: 'hi i want to chat with you!',
-      language: window.localStorage.language}
-      });
-      c.on('open', function() {
-        connect(c);
-      });
-      c.on('error', function(err) { alert(err); });
-    }
-    connectedPeers[requestedPeer] = 1;
-  },
-  error: function(err){
-    alert(err);
-  }
-  });
-  $.ajax({
-    type: 'POST',
-    url: 'http://localhost:3000/watson/',
+    url: 'https://cit-i-zen.herokuapp.com:443/watson/',
     data:{
       twitter : window.localStorage.twitter
     },
     success: function(data){
       console.log(data);
       $('#hobbies').empty()
-      for(var s of data)
+      if(data.error)
       {
-        $('#hobbies').append('<p>' + s + '</p>')
+        $('#hobbies').append('<p>Could not retrieve Twitter analytics</p>')
+      }
+      else
+      {
+        $('#hobbies').append('<p>Twitter analytics results:</p>')
+        for(var s of data)
+        {
+          $('#hobbies').append('<p>' + s + '</p>')
+        }
       }
     },
     error: function(err){
-      console.log("Invalid twitter handle probably");
+      console.log("connection disrupted");
     }
   });
-});
-
-// Await connections from others
-peer.on('connection', connect);
-peer.on('call', answer);
-peer.on('error', function(err) {
-  console.log(err);
-})
-
-// Make sure things clean up properly.
-
-window.onunload = window.onbeforeunload = function(e) {
-  if (!!peer && !peer.destroyed) {
-    peer.destroy();
-  }
-};
 
 }
+
+// Show this peer's ID.
+
+
+socket.on('chat', function(data) {
+  $('.messages').append('<div><p><strong>' + data.id + ':</strong> ' + data.text +
+    '</p>');
+  if(window.localStorage.language !== lang)
+  {
+    $.ajax({
+      type: 'POST',
+      url: 'https://cit-i-zen.herokuapp.com:443/translate/',
+      data:{
+      text: data.text,
+      target: window.localStorage.language,
+      source: lang
+      },
+      success: function(data){
+        console.log(data)
+        if(data.error)
+          $('.messages').append('<p>' + JSON.stringify(data.error) + '</p></div>')
+        else
+          $('.messages').append('<p>' + data + '</p></div>')
+      },
+      error: function(err){
+        console.log(JSON.stringify(err))
+        $('.messages').append('<p>' + JSON.stringify(JSON.stringify(err)) + '</p></div>')
+      }
+    });
+  }
+});
+
+socket.on('kill', function(data) {
+    console.log(data + ' has left the chat.');
+    $('.connection').filter(function(){return $(this).attr('id') === data}).remove();
+    connectedPeers[data] = false;
+    disableFeatures();
+    mediapromise = null;
+});
+
+socket.on('disconnect', function(data){
+  $('.connection').empty();
+  for(var a in connectedPeers)
+    connectedPeers[a] = false;
+  disableFeatures();
+  mediapromise = null;
+})
+socket.on('call', function(){
+  console.log("got call")
+  answer()
+})
+socket.on('error', function(err) {
+  console.log(JSON.stringify(err));
+})
+// Make sure things clean up properly.
+window.onunload = window.onbeforeunload = function(e) {
+  disableFeatures()
+  if(peer) {
+    peer.destroy();
+  }
+  if (socket) {
+    socket.close();
+  }
+};

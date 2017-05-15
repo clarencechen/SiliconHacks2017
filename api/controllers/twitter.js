@@ -12,10 +12,11 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-const consumer = 'kB24rJmyvMQ7E8vPwp00TUXaJ'
-const consumer_secret = 'QxWNsqMZbTKVcBDikbuFa5J2qMf3aQRgzZVFFVgLYwJBHpQQv7'
-const access_token = '80007743-NPiZx3QgvYG1mPb3mnCgcm9LHoY4IJK45lnCHbO8O'
-const access_secret = 'vJcm11ZWNK0WljHUiLstM3wM2dtuNd8LGPITuU2zhfmy7'
+require('dotenv-safe').load();
+const consumer = process.env.CONSUMER
+const consumer_secret = process.env.CONSUMER_SECRET
+const access_token = process.env.ACCESS
+const access_secret = process.env.ACCESS_SECRET
 const twitter = require('twitter');
 const MAX_COUNT = 200;
 

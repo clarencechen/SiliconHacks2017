@@ -1,19 +1,17 @@
 <!DOCTYPE html>
 <html>
-  <head title="citizen">
+  <head title="CITiZEN">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
     <link rel="stylesheet" id="bulma" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.3.2/css/bulma.min.css" />
     <link rel="stylesheet" type="text/css" href="./css/login.css">
-
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
     <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.1.4/js.cookie.min.js"></script>
-    <script src="./js/peer.min.js"></script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.1/socket.io.slim.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/peerjs/0.3.14/peer.min.js"></script>
     <script src="control.js"></script>
-
+    <script src="video.js"></script>
 
   </head>
 
@@ -25,7 +23,7 @@
           <div class="container">
             <div class="nav-right nav-menu">
               <span class="nav-item">
-                <a class="button is-dark is-inverted is-large" onclick="javascript:toggle()">
+                <a class="button is-dark is-inverted is-large" onclick="javascript: toggle()">
                   <span class="icon is-large">
                     <i class="fa fa-bars"></i>
                   </span>
@@ -41,34 +39,35 @@
       <div class="hero-body">
         <div class="container has-text-centered">
           <div id="match" >
-            <a class="button is-large" onclick="javascript: match()">
+            <a class="button is-large" id='match' onclick='javascript: match()'>
               Match
             </a>
             <h2 class="subtitle">
               Click to match with another earthling.
             </h2>
           </div>
-          <div id="chat">
+          <div id="actions">
+            <br>
+            <button id='connect'>Connect</button>
+            <button id='close'>Close selected connections</button>
+            <div id="chat">
+              <br>
+              <form id="chatinput">
+                <input type="text" id="text" placeholder="Enter message">
+                <input id ="send" class="button" type="submit" value="Send to selected peers">
+              </form>
+              <br>
+              <div id="message"></div>
+            </div>
             <div id="video">
               <video autoplay></video>
-              <div>
-                <input type="checkbox" name="Audio Only" id="novideo">Audio Only
-                <input type="checkbox" name="Mute" id="mute">Mute
-                <button id='call'>videocall</button>
+              <div class="actions">
+                <input type="checkbox" name="Audio Only" id="novideo"><p>Audio Only</p>
+                <input type="checkbox" name="Mute" id="mute"><p>Mute</p>
+                <button id="call">videocall</button>
               </div>
             </div>
             <br>
-            <div id="actions"><br>
-              <span class="removed">Connect to a peer:</span> <input class="removed" type="text" id="rid" placeholder="Someone else's id"><input class="button" type="button" value="Connect" id="connect"><br><br>
-
-              <form id="send">
-                <input type="text" id="text" placeholder="Enter message"><input class="button" type="submit" value="Send to selected peers">
-              </form>
-              <button id="close">Close selected connections</button>
-            </div>
-            <div id="wrap"><div id="connections"><span class="filler">You have not yet
-                  made any connections.</span></div>
-            <div class="clear"></div></div>
           </div>
           <div id='hobbies'></div>
         </div> <!-- End #chat div -->
@@ -77,7 +76,7 @@
 
 <!-- Hero footer: will stick at the bottom -->
 <div class="hero-foot">
-  <p>SiliconHacks 2017</p>
+  <p>Brought to you by PaleBlueDot</p>
 </div>
 </section>
 
@@ -109,6 +108,10 @@
   <td id="gender"></td>
 </tr>
 <tr>
+  <td>Sexual Orientation</td>
+  <td id="orientation"></td>
+</tr>
+<tr>
   <td>Religion</td>
   <td id="religion"></td>
 </tr>
@@ -126,7 +129,7 @@
 <!-- </div> -->
 <script>
   var isToggled = false;
-  $('#chat').toggle();
+  $('#actions').toggle();
   $('.removed').remove();
   /* Open the sidenav */
   function toggle() {
@@ -141,27 +144,20 @@
   }
 
   // Populate bio
-  document.getElementById("name").innerHTML = window.localStorage.getItem('first') + " " + window.localStorage.getItem('last');
+  document.getElementById("name").innerHTML = window.localStorage.getItem('username');
   document.getElementById("age").innerHTML = window.localStorage.getItem('Age');
   document.getElementById("country").innerHTML = window.localStorage.getItem('Country');
   document.getElementById("ethnicity").innerHTML = window.localStorage.getItem('Ethnicity');
   document.getElementById("gender").innerHTML = window.localStorage.getItem('Gender');
+  document.getElementById("orientation").innerHTML = window.localStorage.getItem('Sexual Orientation');
   document.getElementById("religion").innerHTML = window.localStorage.getItem('Religion');
+
 
   function match() {
   $('#match').toggle(600);
-  $('#chat').toggle(600);
-
+  $('#actions').toggle(600);
   }
-
-
-  $('chatmatch').click(function(){
-  window.location.replace("chat.html");
-  });
-  $('#videomatch').click(function(){
-  window.location.replace("video.html");
-  });
-  var user = Cookies.getJSON('user');
+  var user = window.localStorage.getItem('user');
   console.log(user);
 </script>
 </body>

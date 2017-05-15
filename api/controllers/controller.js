@@ -1,42 +1,42 @@
 'use strict';
-var fs = require('fs');
-var cfg = JSON.parse(fs.readFileSync('./cfg.json', 'utf8'));
+process.env = require('dotenv-safe').load().parsed;
+//var cfg = JSON.parse(fs.readFileSync('./cfg.json', 'utf8'));
 // load the Cloudant library
-var cloudantURL = "https://azincencorrioduchignoody:7d392fbae6755d3aab27bdb441c2b6a1ae879194@38255844-f351-4ae0-9d53-5774023e3cf4-bluemix.cloudant.com"
+var cloudantURL = "https://" + process.env.CLOUDANT_USER + ":" + process.env.CLOUDANT_PSWD + "@" + process.env.CLOUDANT_HOST + ".cloudant.com";
 var Cloudant = require('cloudant'),
   cloudant = Cloudant({
     url: cloudantURL
-  }),
-  db = cloudant.db.use("users");
+  });
+var users = cloudant.db.use("users");
+var queue = cloudant.db.use("queue");
 
 var PersonalityInsightsV3 = require('watson-developer-cloud/personality-insights/v3');
 var personality_insights = new PersonalityInsightsV3({
-  username: cfg.PERSONALITY_USER,
-  password: cfg.PERSONALITY_PSWD,
+  username: process.env.PERSONALITY_USER,
+  password: process.env.PERSONALITY_PSWD,
   version_date: '2017-12-31'
 });
 
 var twitter = require('./twitter.js');
 var LanguageTranslatorV2 = require('watson-developer-cloud/language-translator/v2');
 var language_translator = new LanguageTranslatorV2({
-  username: cfg.TRANSLATE_USER,
-  password: cfg.TRANSLATE_PSWD,
+  username: process.env.TRANSLATE_USER,
+  password: process.env.TRANSLATE_PSWD,
   url: 'https://gateway.watsonplatform.net/language-translator/api/',
   version: 'v2'
 });
 
 var twitter = require('./twitter.js');
-var vQue = [];
-var tQue = [];
+var counter = 0;
 
 // create a document
-var createDocument = function(newUser, callback) {
-  console.log("Creating document 'mydoc'");
-  // we are specifying the id of the document so we can update and delete it later
-  db.insert(newUser, function(err, data) {
-    console.log("Error:", err);
-    console.log("Data:", data);
-    callback(err, data);
+exports.new_user = function(req, res) {
+  console.log("Creating user" + req.body.user);
+  users.insert(req.body, function(err, data) {
+    if(err)
+      return res.status(500).json(err)
+    else
+      return res.json("Success!")
   });
 };
 
@@ -45,8 +45,8 @@ exports.get_user = function(req, res) {
   var username = req.params.username;
   var password = req.params.password;
 
-  //if db contains username, check password
-  db.find({
+  //if users contains username, check password
+  users.find({
     "selector": {
       "$and": [{
           "username": username
@@ -57,58 +57,72 @@ exports.get_user = function(req, res) {
       ]
     }
   }, function(er, result){
-      console.log(er);
-      console.log(result);
+      if(er)
+      {
+        console.log(er);
+        return res.status(500).json(err)
+      }
       res.json(result);
   });
 };
 
-//
-exports.get_match_video = function(req, res) {
-
-if (vQue.length === 0)
-{
-  var usr = req.body.user;
-  var peer = req.body.peer;
-  vQue.push({user: usr, peer: peer});
-
-  res.status(500).send('Wait');
-}
-else
-{
-  var stuff = vQue.pop();
-  res.json(stuff);
-}
-
-};
-
 exports.get_match_text = function(req, res){
-  console.log('peer ' + req.body.peer + 'trys to connect');
-  if (tQue.length === 0)
-  {
-    var usr = req.body.user;
-    var peer = req.body.peer;
-    tQue.push({user: usr, peer: peer});
-    res.status(500).send('Wait');
-  }
-  else
-  {
-    var stuff = tQue.pop();
-    res.json(stuff);
-  }
-};
+  console.log('user ' + req.body.user + ' trys to connect');
+  queue.find({
+    "selector":{
+      "$not":{
+        "Ethnicity": req.body.ethnicity,
+        "Gender": req.body.gender,
+        "Age": req.body.age,
+        "Religion": req.body.religion,
+        "Sexual Orientation": req.body.orientation
+//      ,"Interests": 
+      }
+    },
+    "fields":["socket", "_id", "_rev"],
+    "sort": [{"position:number": "asc"}]
+  }, function(err, match){
+    if(err)
+      return res.status(501).json(err)
+    else if(match.docs.length < 1)
+    {
+      console.log('database waiting for match')
+      queue.insert({
+        "Ethnicity": req.body.ethnicity,
+        "Gender": req.body.gender,
+        "Age": req.body.age,
+        "Religion": req.body.religion,
+        "Sexual Orientation": req.body.orientation,
+        "socket": req.body.socketid,
+        "position": counter
+      }, function(err, body){
+        if(err)
+          return res.status(501).json(err)
+        else
+        {
+          counter += 1
+          res.status(500).send('Wait')
+        }
+      })
+    }
+    else
+    {
+      console.log('database found match')
+      queue.destroy(match.docs[0]._id, match.docs[0]._rev, function(err, body){
+        if(err)
+          return res.status(501).json(err)
+        return res.json({id: match.docs[0].socket})
+      })
+    }
+  })
+}
 
 exports.watson = function(req, res){
   var promise = twitter.getTweets(req.body.twitter);
   promise.then(function(tweetarr){
     var corpus = ''
-<<<<<<< HEAD
-    for(var t of tweetarr){
-=======
     for(var t of tweetarr)
->>>>>>> 1adc743 (bug fix)
       corpus += t.text + '\n'
-
     var params = {
     // Get the content items from the JSON file.
     text : corpus,
@@ -118,9 +132,12 @@ exports.watson = function(req, res){
     },
     consumption_preferences : true
     };
-    personality_insights.profile(params, function(error, response) {
-      if (error)
-        console.log('Error:', error);
+    personality_insights.profile(params, function(err, response) {
+      if (err)
+      {
+        console.log('Error:', JSON.stringify(err, null, 3));
+        res.json({error : err})
+      }
       else
       {
         console.log('done!');
@@ -129,6 +146,9 @@ exports.watson = function(req, res){
         res.json(hobbies)
       }
     });
+  }).catch(function(err) {
+    console.log(JSON.stringify(err, null, 3));
+    res.json({error : err})
   })
 }
 function process(response) {
@@ -152,13 +172,24 @@ function process(response) {
 }
 
 exports.translate = function(req, res){
-  data = req.body;
+  var data = req.body;
   language_translator.translate({
-  text: data.text, source : data.source, target: 'cn' },
+  text: data.text, source : data.source, target: data.target },
   function (err, translation) {
     if (err)
-      console.log('error:', err);
+    {
+      console.log('Error:', err);
+      res.json({error : err});
+    }
     else
+    {
       console.log(JSON.stringify(translation, null, 2));
+      res.json(translation.translations[0].translation);
+    }
+<<<<<<< HEAD
 });
 }
+=======
+  });
+}
+>>>>>>> 6646b74 (reorganize and push video logic)

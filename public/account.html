@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+  <head title="CITiZEN">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link rel="stylesheet" id="bulma" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.3.2/css/bulma.min.css" />
+    <link rel="stylesheet" type="text/css" href="./css/fancy.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+    <script src="login.js"></script>
+    <script src="account.js"></script>
+  </head>
+
+  <body>
+    <section class="hero is-light is-large is-fullheight">
+      <!-- Hero content: will be in the middle -->
+      <div class="hero-body">
+        <div class="container has-text-centered">
+          <div id="account" >
+            <p>Username</p>
+            <input type="text" id="username">
+            <p>Password</p>
+            <input type="password" id="password">
+            <button id="advance">Next</button>
+          </div>
+          <div id="background">
+            <h1>Please input background information here so we can match you appropriately</h1>
+            <br>
+            <form id="bginfo">
+              <p>Ethnicity (Please select all that apply)</p>
+              <br>
+              <div id='ethnicity'>
+                <input type='checkbox' name='ethnicity' value='African'>Black/Sub-Saharan African
+                <input type='checkbox' name='ethnicity' value='Asian'>East or Southeast Asian
+                <input type='checkbox' name='ethnicity' value='European'>European
+                <input type='checkbox' name='ethnicity' value='Indian'>Indian/South Asian
+                <input type='checkbox' name='ethnicity' value='MidEastern'>Middle Eastern or North African
+                <input type='checkbox' name='ethnicity' value='NativeAmerican'>Native/Indigenous American/First Nations
+                <input type='checkbox' name='ethnicity' value='Other'>Other
+              </div>
+              <p>Language (Unfortunately we can only translate so many languages, here they are)</p>
+              <select id='language' required>
+                <option value='en'>English</option>
+                <option value='ar'>Arabic</option>
+                <option value='de'>German</option>
+                <option value='es'>Spanish/</option>
+                <option value='fr'>French</option>
+                <option value='it'>Italian</option>
+                <option value='pt'>Portugese</option>
+              </select>
+              <p>Gender</p>
+              <select id='gender' required>
+                <option value='Male'>Male</option>
+                <option value='Female'>Female</option>
+                <option value='Other'>Other</option>
+              </select>
+              <p>Sexual Orientation</p>
+              <select id='orientation' required>
+                <option value='Male'>Attracted mainly to Males</option>
+                <option value='Female'>Attracted mainly to Females</option>
+                <option value='Bisexual'>Bisexual</option>
+                <option value='Other'>Other</option>
+              </select>
+              <p>Religion</p>
+              <select id='religion' required>
+                <option value='Agnostic'>Agnostic</option>
+                <option value='Atheist'>Atheist</option>
+                <option value='Buddhist'>Buddhist</option>
+                <option value='Christian'>Christian</option>
+                <option value='Hindu'>Hindu</option>
+                <option value='Jewish'>Jewish</option>
+                <option value='Muslim'>Muslim</option>
+                <option value='Other Faith'>Other Faith</option>
+              </select>
+              <p>Age</p>
+              <input type="number" name="age" id="age" min="0" max="110" step="1" required>
+              <p>Twitter Account Name (If you have one)</p>
+              <input type="text" id="twitter">
+              <br>
+              <input type="submit" name="Make a new account">
+              <input type="reset">
+            </form>
+          </div>
+        </div>
+      </div>
+<!-- Hero footer: will stick at the bottom -->
+      <div class="hero-foot">
+        <p>Brought to you by PaleBlueDot</p>
+      </div>
+    </section>
+  <!-- End of Hero section -->
+  <script>
+    var isToggled = false;
+    $('#background').toggle();
+    $('.removed').remove();
+  </script>
+  </body>
+
+</html>

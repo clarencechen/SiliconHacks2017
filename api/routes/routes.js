@@ -5,12 +5,11 @@ module.exports = function(app) {
   //login
   app.route('/user/:username/:password')
      .get(YDD.get_user)
-
+  app.route('/new_user')
+  .post(YDD.new_user)
   //match
-  app.route('/match_video')
-    .post(YDD.get_match_video)
   app.route('/match_text')
-    .post(YDD.get_match_text)
+  .post(YDD.get_match_text)
   app.route('/watson')
   .post(YDD.watson)
   app.route('/translate')
