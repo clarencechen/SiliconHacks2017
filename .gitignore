@@ -1,8 +1,5 @@
 # dependencies
 node_modules/**
 
-# Secret
-cfg.json
-
 # misc
 .DS_Store

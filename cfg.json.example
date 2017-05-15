@@ -1,6 +1,0 @@
-{
-  "PERSONALITY_USER": "username_for_personalityinsight",
-  "PERSONALITY_PSWD": "password_for_personalityinsight",
-  "TRANSLATE_USER": "username_for_languagetranslator",
-  "TRANSLATE_PSWD": "password_for_languagetranslator"
-}
