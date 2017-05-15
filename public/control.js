@@ -1,12 +1,16 @@
-// https://github.com/peers/peerjs.git
 var mediapromise = null;
 var peer;
 var g_id;
 var connectedPeers = {};
 var lang;
+//redirect if not logged in
+if(window.localStorage.getItem('_id') === null)
+{
+  window.location.replace('login.html');
+}
+// https://github.com/peers/peerjs.git
 // Connect to PeerJS, have server assign an ID instead of providing one
 // Showing off some of the configs available with PeerJS :).
-
 // Handle a connection object.
 function connect(c) {
   // Handle a chat connection.
@@ -189,9 +193,6 @@ function answer(call) {
 }
 
 $(document).ready(function() {
-
-  $('#connect').tap(onmatch);
-
   // Connect to a peer
   $('#notconnected').click(function() {
     var requestedPeer = $('#rid').val();

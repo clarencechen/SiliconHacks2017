@@ -7,8 +7,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 var routes = require('./api/routes/routes.js');
 routes(app);
-app.use(express.static(__dirname + '/public')));
+app.use(express.static(__dirname + '/public'));
 
-app.listen(port);
+app.listen(process.env.PORT || port);
 
-console.log("working on 3000");
+console.log("working on " + process.env.PORT);
