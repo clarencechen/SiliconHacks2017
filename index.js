@@ -7,7 +7,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 var routes = require('./api/routes/routes.js');
 routes(app);
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(__dirname + '/public')));
 
 app.listen(port);
 
