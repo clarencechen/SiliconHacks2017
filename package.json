@@ -24,7 +24,7 @@
     "express": "^4.15.2",
     "fs": "0.0.1-security",
     "heroku-ssl-redirect": "0.0.4",
-    "peerjs": "^0.3.14",
+    "peer": "^0.5.3",
     "socket.io": "^2.0.1",
     "twitter": "^1.7.0",
     "watson-developer-cloud": "^2.31.1"
