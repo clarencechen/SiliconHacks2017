@@ -37,12 +37,14 @@
       <!-- Hero content: will be in the middle -->
       <div class="hero-body">
         <div class="container has-text-centered">
-          <a class="button is-large" onclick="javascript: onmatch()">
-            Match
-          </a>
-          <h2 class="subtitle">
-            Click to match with another earthling.
-          </h2>
+          <div id="match" >
+            <a class="button is-large" onclick="javascript: match()">
+              Match
+            </a>
+            <h2 class="subtitle">
+              Click to match with another earthling.
+            </h2>
+          </div>
           <div id="actions">
             Your PeerJS ID is <span id="pid"></span><br>
             Connect to a peer: <input type="text" id="rid" placeholder="Someone else's id"><input class="button" type="button" value="Connect" id="connect"><br><br>
@@ -66,7 +68,7 @@
             <input type="checkbox" name="Mute" id="mute">Mute
             <button id='call'>videocall</button>
           </div>
-
+          </div> <!-- End #chat div -->
         </div>
       </div>
 
@@ -121,6 +123,7 @@
 <!-- </div> -->
 <script>
   var isToggled = false;
+  $('#chat').toggle();
   /* Open the sidenav */
   function toggle() {
   console.log(isToggled)
@@ -141,7 +144,11 @@
   document.getElementById("gender").innerHTML = window.localStorage.getItem('Gender');
   document.getElementById("religion").innerHTML = window.localStorage.getItem('Religion');
 
-
+  function match() {
+  $('#match').toggle(600);
+  $('#chat').toggle(600);
+  
+  }
   
 
   $('chatmatch').click(function(){
