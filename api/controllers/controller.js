@@ -14,7 +14,10 @@ var personality_insights = new PersonalityInsightsV3({
   version_date: '2017-12-31'
 });
 
+<<<<<<< HEAD
 var twitter = require('./twitter.js');
+=======
+>>>>>>> 59126ad (get rid of head)
 var LanguageTranslatorV2 = require('watson-developer-cloud/language-translator/v2');
 var language_translator = new LanguageTranslatorV2({
   username: "93e6cb64-66d2-4cc0-8985-820705f4a9e7",
@@ -22,6 +25,12 @@ var language_translator = new LanguageTranslatorV2({
   url: 'https://gateway.watsonplatform.net/language-translator/api/'
 });
 
+<<<<<<< HEAD
+=======
+var twitter = require('twitter.js');
+var twitter = require('./twitter.js');
+
+>>>>>>> 59126ad (get rid of head)
 var vQue = [];
 var tQue = [];
 
