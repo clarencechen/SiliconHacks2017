@@ -206,10 +206,10 @@ function answer(call) {
 
 $(document).ready(function() {
 
-
+  $('#connect').tap(onmatch);
 
   // Connect to a peer
-  $('#connect').click(function() {
+  $('#notconnected').click(function() {
     var requestedPeer = $('#rid').val();
     if (!connectedPeers[requestedPeer]) {
       // Create 2 connections, one labelled chat and another labelled file.
@@ -298,6 +298,7 @@ function onmatch()
 
 // Show this peer's ID.
 peer.on('open', function(id){
+  alert('stuff is obtained');
   g_id = id;
   var usr = window.localStorage.username;
   $('#hobbies').append('<p>Analyzing twitter accounts...</p>')
@@ -333,7 +334,7 @@ peer.on('open', function(id){
     connectedPeers[requestedPeer] = 1;
   },
   error: function(err){
-    console.log("Failed to match");
+    alert(err);
   }
   });
   $.ajax({

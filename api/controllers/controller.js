@@ -77,13 +77,13 @@ if (vQue.length === 0)
 else
 {
   var stuff = vQue.pop();
-  console.log('pop: ', stuff);
   res.json(stuff);
 }
 
 };
 
 exports.get_match_text = function(req, res){
+  console.log('peer ' + req.body.peer + 'trys to connect');
   if (tQue.length === 0)
   {
     var usr = req.body.user;
@@ -94,7 +94,6 @@ exports.get_match_text = function(req, res){
   else
   {
     var stuff = tQue.pop();
-    console.log('pop: ', stuff);
     res.json(stuff);
   }
 };
