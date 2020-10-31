@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html>
   <head title="CITiZEN">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
     <link rel="stylesheet" id="bulma" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.3.2/css/bulma.min.css" />
     <link rel="stylesheet" type="text/css" href="./css/login.css">
@@ -10,8 +9,9 @@
     <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.1/socket.io.slim.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/peerjs/0.3.14/peer.min.js"></script>
-    <script src="control.js"></script>
-    <script src="video.js"></script>
+    <script src="./client/control.js"></script>
+    <script src="./client/video.js"></script>
+    <script src="toggle.js"></script>
 
   </head>
 
@@ -37,27 +37,18 @@
 
       <!-- Hero content: will be in the middle -->
       <div class="hero-body">
-        <div class="container has-text-centered">
-          <div id="match" >
-            <a class="button is-large" id='match' onclick='javascript: match()'>
-              Match
-            </a>
-            <h2 class="subtitle">
-              Click to match with another earthling.
-            </h2>
-          </div>
-          <div id="actions">
+        <div cid="chat" lass="container has-text-centered">
             <br>
             <button id='connect'>Connect</button>
             <button id='close'>Close selected connections</button>
-            <div id="chat">
+            <div id="textchat">
               <br>
               <form id="chatinput">
                 <input type="text" id="text" placeholder="Enter message">
                 <input id ="send" class="button" type="submit" value="Send to selected peers">
               </form>
               <br>
-              <div id="message"></div>
+              <div id="chatbox"></div>
             </div>
             <div id="video">
               <video autoplay></video>
@@ -68,8 +59,6 @@
               </div>
             </div>
             <br>
-          </div>
-          <div id='hobbies'></div>
         </div> <!-- End #chat div -->
       </div>
 </div>
@@ -88,77 +77,44 @@
     <section class="hero is-fullheight">
       <table class="table is-striped" style="margin-top:6em">
         <thead>
-          <th>Name</th>
+          <th>Account Info for:</th>
           <th id="name"></th>
         </thead>
         <tbody>
-          <td>Age</td>
-          <td id="age"></td>
-</tr>
-<tr>
-  <td>Country</td>
-  <td id="country"></td>
-</tr>
-<tr>
-  <td>Ethnicity</td>
-  <td id="ethnicity"></td>
-</tr>
-<tr>
-  <td>Gender</td>
-  <td id="gender"></td>
-</tr>
-<tr>
-  <td>Sexual Orientation</td>
-  <td id="orientation"></td>
-</tr>
-<tr>
-  <td>Religion</td>
-  <td id="religion"></td>
-</tr>
-</tbody>
-</table>
-</div>
-</section>
-</div>
+          <tr>
+            <td>Age:</td>
+            <td id="age"></td>
+          </tr>
+          <tr>
+            <td>Ethnicity:</td>
+            <td id="ethnicity"></td>
+          </tr>
+          <tr>
+            <td>Gender:</td>
+            <td id="gender"></td>
+          </tr>
+          <tr>
+            <td>Sexual Orientation:</td>
+            <td id="orientation"></td>
+          </tr>
+          <tr>
+            <td>Religion:</td>
+            <td id="religion"></td>
+          </tr>
+          <tr>
+            <td>Language:</td>
+            <td id="language"></td>
+          </tr>
+        </tbody>
+        <button id='logout'>Logout</button>
+      </table>
+    </section>
+  </div>
 </div>
 
-
-<!-- <div align="center"> -->
-<!--   <button id="chatmatch">Find A Chat Match</button> -->
-<!--   <button id="videomatch">Find A Video Match</button> -->
-<!-- </div> -->
 <script>
-  var isToggled = false;
-  $('#actions').toggle();
-  $('.removed').remove();
-  /* Open the sidenav */
-  function toggle() {
-  console.log(isToggled)
-  if (isToggled) {
-  isToggled = false;
-  document.getElementById("sidebar").style.right = "-100%";
-  } else {
-  isToggled = true;
-  document.getElementById("sidebar").style.right = "0";
-  }
-  }
-
-  // Populate bio
-  document.getElementById("name").innerHTML = window.localStorage.getItem('username');
-  document.getElementById("age").innerHTML = window.localStorage.getItem('Age');
-  document.getElementById("country").innerHTML = window.localStorage.getItem('Country');
-  document.getElementById("ethnicity").innerHTML = window.localStorage.getItem('Ethnicity');
-  document.getElementById("gender").innerHTML = window.localStorage.getItem('Gender');
-  document.getElementById("orientation").innerHTML = window.localStorage.getItem('Sexual Orientation');
-  document.getElementById("religion").innerHTML = window.localStorage.getItem('Religion');
-
-
-  function match() {
-  $('#match').toggle(600);
-  $('#actions').toggle(600);
-  }
-  var user = window.localStorage.getItem('user');
-  console.log(user);
+  $('#chat').toggle()
+  $('.removed').remove()
 </script>
 </body>
 

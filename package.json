@@ -9,22 +9,25 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/maitianth/SiliconHacks2017.git"
+    "url": "git+https://github.com/clarencechen/SiliconHacks2017.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/maitianth/SiliconHacks2017/issues"
+    "url": "https://github.com/clarencechen/SiliconHacks2017/issues"
   },
-  "homepage": "https://github.com/maitianth/SiliconHacks2017#readme",
+  "homepage": "https://github.com/clarencechen/SiliconHacks2017#readme",
   "dependencies": {
+    "argon2": "^0.27.0",
     "body-parser": "^1.17.1",
-    "cloudant": "^1.7.1",
+    "connect-pg-simple": "^6.2.1",
     "dotenv-safe": "^4.0.4",
     "express": "^4.15.2",
+    "express-session": "^1.17.1",
     "fs": "0.0.1-security",
     "heroku-ssl-redirect": "0.0.4",
     "peer": "^0.5.3",
+    "pg": "^8.4.2",
     "socket.io": "^2.0.1",
     "twitter": "^1.7.0",
     "watson-developer-cloud": "^2.31.1"

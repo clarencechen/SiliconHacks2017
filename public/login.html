@@ -1,22 +1,24 @@
 <!DOCTYPE html>
 <html>
-
-  <head>
+  <head title="CITiZEN">
     <meta charset="UTF-8">
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
     <link rel="stylesheet" id="bulma" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.3.2/css/bulma.min.css" />
+    <link rel="stylesheet" type="text/css" href="./css/login.css">
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
     <script src="login.js"></script>
-    <link rel="stylesheet" type="text/css" href="./css/login.css">
+    <script src="toggle.js"></script>
   </head>
 
   <body>
     <!-- particles.js container -->
     <div id="particles-js"></div>
-    <img id="globe" src="./static/globe.png" alt="" onclick="javascript:toggle()">
-    <div id="login-form" class="login-wrapper columns sidenav">
+    <img id="globe" src="./imgs/globe.png" alt="" onclick="javascript:toggle()">
+    <div id="sidebar" class="login-wrapper columns sidenav">
       <div class="column is-9 is-hidden-mobile hero-banner"></div>
       <div class="column is-3">
         <section class="hero is-fullheight">
@@ -30,9 +32,9 @@
               <div class="columns">
                 <div class="column is-8 is-offset-2">
                   <h1 class="avatar has-text-centered section">
-                    <img width="100px" src="./static/user.png">
+                    <img width="100px" src="./imgs/user.png">
                   </h1>
-                  <div class="login-form">
+                  <div class="sidebar">
                     <p class="control has-icon has-icon-right">
                       <input id="username" class="input email-input" type="text" placeholder="jsmith@example.org">
                       <span class="icon user">
@@ -51,8 +53,8 @@
                   </div>
                   <div class="section forgot-password">
                     <p class="has-text-centered">
-                      <a href="#">Forgot password</a>
-                      <a href="account.html">Don't have an account?</a>
+                      <a href="#">Forgot password?</a>
+                      <a href="./signup.html">Don't have an account?</a>
                     </p>
                   </div>
                 </div>
@@ -64,19 +66,6 @@
     </div>
 
     <script type="text/javascript">
-      var isToggled = false;
-      /* Open the sidenav */
-      function toggle() {
-      console.log(isToggled)
-      if (isToggled) {
-      isToggled = false;
-      document.getElementById("login-form").style.right = "-100%";
-      } else {
-      isToggled = true;
-      document.getElementById("login-form").style.right = "0";
-      }
-      }
-
       particlesJS("particles-js", {
       "particles": {
       "number": {

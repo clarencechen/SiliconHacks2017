@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html>
   <head title="CITiZEN">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css" rel="stylesheet" type="text/css">
+    <meta charset="UTF-8">
+
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
     <link rel="stylesheet" id="bulma" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.3.2/css/bulma.min.css" />
     <link rel="stylesheet" type="text/css" href="./css/fancy.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
     <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
-    <script src="login.js"></script>
-    <script src="account.js"></script>
+    <script src="signup.js"></script>
   </head>
 
   <body>
@@ -19,9 +19,9 @@
         <div class="container has-text-centered">
           <div id="account" >
             <p>Username</p>
-            <input type="text" id="username">
+            <input type="text" id="username" required>
             <p>Password</p>
-            <input type="password" id="password">
+            <input type="password" id="password" required>
             <button id="advance">Next</button>
           </div>
           <div id="background">
@@ -34,12 +34,12 @@
                 <input type='checkbox' name='ethnicity' value='African'>Black/Sub-Saharan African
                 <input type='checkbox' name='ethnicity' value='Asian'>East or Southeast Asian
                 <input type='checkbox' name='ethnicity' value='European'>European
-                <input type='checkbox' name='ethnicity' value='Indian'>Indian/South Asian
+                <input type='checkbox' name='ethnicity' value='SouthAsian'>South Asian
                 <input type='checkbox' name='ethnicity' value='MidEastern'>Middle Eastern or North African
-                <input type='checkbox' name='ethnicity' value='NativeAmerican'>Native/Indigenous American/First Nations
+                <input type='checkbox' name='ethnicity' value='NativeAmerican'>Native American/First Nations
                 <input type='checkbox' name='ethnicity' value='Other'>Other
               </div>
-              <p>Language (Unfortunately we can only translate so many languages, here they are)</p>
+              <p>Language (Unfortunately we can only translate the following languages)</p>
               <select id='language' required>
                 <option value='en'>English</option>
                 <option value='ar'>Arabic</option>
@@ -91,9 +91,8 @@
     </section>
   <!-- End of Hero section -->
   <script>
-    var isToggled = false;
-    $('#background').toggle();
-    $('.removed').remove();
+    $('#background').toggle()
+    $('.removed').remove()
   </script>
   </body>
 
