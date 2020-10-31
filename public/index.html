@@ -45,53 +45,53 @@
               Click to match with another earthling.
             </h2>
           </div>
-          <div id="actions">
-            Your PeerJS ID is <span id="pid"></span><br>
-            Connect to a peer: <input type="text" id="rid" placeholder="Someone else's id"><input class="button" type="button" value="Connect" id="connect" onclick="javascript: onmatch()"><br><br>
+          <div id="chat">
+            <div id="video">
+              <video autoplay></video>
+              <div>
+                <input type="checkbox" name="Audio Only" id="novideo">Audio Only
+                <input type="checkbox" name="Mute" id="mute">Mute
+                <button id='call'>videocall</button>
+              </div>
+            </div>
+            <br>
+            <div id="actions">
+              Your PeerJS ID is <span id="pid"></span><br>
+              Connect to a peer: <input type="text" id="rid" placeholder="Someone else's id"><input class="button" type="button" value="Connect" id="connect" onclick="javascript: onmatch()"><br><br>
 
-            <form id="send">
-              <input type="text" id="text" placeholder="Enter message"><input class="button" type="submit" value="Send to selected peers">
-            </form>
-            <button id="close">Close selected connections</button>
+              <form id="send">
+                <input type="text" id="text" placeholder="Enter message"><input class="button" type="submit" value="Send to selected peers">
+              </form>
+              <button id="close">Close selected connections</button>
+            </div>
+            <div id="wrap"><div id="connections"><span class="filler">You have not yet
+                  made any connections.</span></div>
+              <div class="clear"></div></div>
           </div>
-
-          <div id="wrap"><div id="connections"><span class="filler">You have not yet
-                made any connections.</span></div>
-            <div class="clear"></div></div>
-
-          <div id="box" style="background: #fff; font-size: 18px;padding:40px 30px; text-align: center;">
-
-          </div>
-          <div id="video">
-            <video autoplay></video>
-            <input type="checkbox" name="Audio Only" id="novideo">Audio Only
-            <input type="checkbox" name="Mute" id="mute">Mute
-            <button id='call'>videocall</button>
-          </div>
-          </div> <!-- End #chat div -->
-        </div>
+        </div> <!-- End #chat div -->
       </div>
+</div>
 
-      <!-- Hero footer: will stick at the bottom -->
-      <div class="hero-foot">
-        <p>SiliconHacks 2017</p>
-      </div>
-    </section>
+<!-- Hero footer: will stick at the bottom -->
+<div class="hero-foot">
+  <p>SiliconHacks 2017</p>
+</div>
+</section>
 
-    <!-- End of Hero section -->
+<!-- End of Hero section -->
 
-    <div id="sidebar" class="login-wrapper columns sidenav">
-      <div class="column is-9 is-hidden-mobile hero-banner"></div>
-      <div class="column is-3">
-        <section class="hero is-fullheight">
-          <table class="table is-striped" style="margin-top:6em">
-            <thead>
-              <th>Name</th>
-              <th id="name"></th>
-            </thead>
-            <tbody>
-              <td>Age</td>
-              <td id="age"></td>
+<div id="sidebar" class="login-wrapper columns sidenav">
+  <div class="column is-9 is-hidden-mobile hero-banner"></div>
+  <div class="column is-3">
+    <section class="hero is-fullheight">
+      <table class="table is-striped" style="margin-top:6em">
+        <thead>
+          <th>Name</th>
+          <th id="name"></th>
+        </thead>
+        <tbody>
+          <td>Age</td>
+          <td id="age"></td>
 </tr>
 <tr>
   <td>Country</td>
