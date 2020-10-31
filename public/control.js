@@ -3,6 +3,7 @@ var mediapromise = null;
 var peer;
 var g_id;
 var connectedPeers = {};
+var lang;
 // Connect to PeerJS, have server assign an ID instead of providing one
 // Showing off some of the configs available with PeerJS :).
 
@@ -10,7 +11,8 @@ var connectedPeers = {};
 function connect(c) {
   // Handle a chat connection.
   if (c.label === 'chat') {
-    console.log('new connection');
+    lang = c.metadata;
+    console.log(lang);
 
     var chatbox = $('<div></div>').addClass('connection').addClass('active').attr('id', c.peer);
     var header = $('<h1></h1>').html('Chat with <strong>' + c.peer + '</strong>');
@@ -32,10 +34,64 @@ function connect(c) {
       call(c.peer)
     })
     c.on('data', function(data) {
-        console.log('Hi YDD');
+      var tran;
       messages.append('<div><span class="peer">' + c.peer + '</span>: ' + data +
         '</div>');
-    });
+
+          $.ajax({
+    type: 'POST',
+    url: 'http://localhost:3000/match_text/',
+    data:{
+      text: data,
+      target: window.localStorage.language,
+      source: lang
+    },
+    success: function(data){
+      console.log(data);
+          var requestedPeer = data['peer'];
+    if (!connectedPeers[requestedPeer]) {
+      // Create 2 connections, one labelled chat and another labelled file.
+      var c = peer.connect(requestedPeer, {
+        label: 'chat',
+        serialization: 'none',
+        metadata: {message: 'hi YDD',
+      language: window.localStorage.language}
+      });
+      c.on('open', function() {
+        connect(c);
+      });
+      c.on('error', function(err) { alert(err); });
+      var f = peer.connect(requestedPeer, { label: 'file', reliable: true });
+      f.on('open', function() {
+        connect(f);
+      });
+      f.on('error', function(err) { alert(err); });
+    }
+    connectedPeers[requestedPeer] = 1;
+  },
+  error: function(err){
+    console.log("Failed to match");
+  }
+  });
+  $.ajax({
+    type: 'POST',
+    url: 'http://localhost:3000/watson/',
+    data:{
+      twitter : window.localStorage.twitter
+          },
+    success: function(data){
+      console.log(data);
+      for(var s in data)
+      {
+        $('#hobbies').append('<p>' + s + '</p>')
+      }
+    },
+    error: function(err){
+      console.log("Invalid twitter handle probably");
+    }
+  });
+});
+
     c.on('close', function() {
         alert(c.peer + ' has left the chat.');
         chatbox.remove();
@@ -160,7 +216,8 @@ $(document).ready(function() {
       var c = peer.connect(requestedPeer, {
         label: 'chat',
         serialization: 'none',
-        metadata: {message: 'hi i want to chat with you!'}
+        metadata: {message: 'hi i want to chat with you!',
+      language: window.localStorage.language}
       });
       c.on('open', function() {
         connect(c);
@@ -260,7 +317,8 @@ peer.on('open', function(id){
       var c = peer.connect(requestedPeer, {
         label: 'chat',
         serialization: 'none',
-        metadata: {message: 'hi i want to chat with you!'}
+        metadata: {message: 'hi i want to chat with you!',
+      language: window.localStorage.language}
       });
       c.on('open', function() {
         connect(c);
