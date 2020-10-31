@@ -1,16 +1,18 @@
 'use strict';
 module.exports = function(app) {
-  var bigboss = require('../controllers/controller.js');
+  var YDD = require('../controllers/controller.js');
   
   //login
   app.route('/user/:username/:password')
-     .get(bigboss.get_user)
+     .get(YDD.get_user)
 
   //match
   app.route('/match_video')
-    .post(bigboss.get_match_video)
+    .post(YDD.get_match_video)
   app.route('/match_text')
-    .post(bigboss.get_match_text)
+    .post(YDD.get_match_text)
   app.route('/watson')
-  .post(bigboss.watson)
+  .post(YDD.watson)
+  app.route('/translate')
+  .post(YDD.translate)
 }
