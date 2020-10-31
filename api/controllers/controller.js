@@ -100,16 +100,17 @@ exports.watson = function(req, res){
   var promise = twitter.getTweets(req.body.twitter);
   promise.then(function(tweetarr){
     var corpus = ''
-    for(var t : tweetarr)
+    for(var t of tweetarr){
       corpus += t.text + '\n'
+    }
     var params = {
     // Get the content items from the JSON file.
     text : corpus,
     headers: {
       'accept-language': 'en',
       'accept': 'application/json',
-      'consumption_preferences' : true
-    }
+    },
+    consumption_preferences : true
     };
     personality_insights.profile(params, function(error, response) {
       if (error)
@@ -118,6 +119,7 @@ exports.watson = function(req, res){
       {
         console.log('done!');
         var hobbies = process(response)
+        console.log(hobbies)
         res.json(hobbies)
       }
     });
@@ -126,11 +128,12 @@ exports.watson = function(req, res){
 function process(response) {
   var hobbies = []
   var preferencecats = response.consumption_preferences
-  for(var pc in preferencecats)
+  for(var pc of preferencecats)
   {
+
     if(pc.consumption_preference_category_id == "consumption_preferences_health_and_activity")
     {
-      for(var p in pc.consumption_preferences)
+      for(var p of pc.consumption_preferences)
       {
         if(p.score > 0.8)
         {
@@ -152,5 +155,4 @@ exports.translate = function(req, res){
     else
       console.log(JSON.stringify(translation, null, 2));
 });
-  
 }

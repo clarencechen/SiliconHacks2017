@@ -243,6 +243,7 @@ function onmatch()
 peer.on('open', function(id){
   g_id = id;
   var usr = window.localStorage.username;
+  $('#hobbies').append('<p>Analyzing twitter accounts...</p>')
   console.log(usr);
   $.ajax({
     type: 'POST',
@@ -285,7 +286,8 @@ peer.on('open', function(id){
     },
     success: function(data){
       console.log(data);
-      for(var s in data)
+      $('#hobbies').empty()
+      for(var s of data)
       {
         $('#hobbies').append('<p>' + s + '</p>')
       }
