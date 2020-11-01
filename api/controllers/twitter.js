@@ -12,6 +12,9 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
+if (process.env.NODE_ENV !== 'production')
+  process.env = require('dotenv-safe').load().parsed
+
 const consumer = process.env.CONSUMER
 const consumer_secret = process.env.CONSUMER_SECRET
 const access_token = process.env.ACCESS

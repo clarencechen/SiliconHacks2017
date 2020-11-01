@@ -16,7 +16,7 @@
     <section class="hero is-light is-large is-fullheight">
       <!-- Hero content: will be in the middle -->
       <div class="hero-body">
-        <div class="container has-text-centered">
+        <div class="container has-text-left">
           <div id="account" >
             <p>Username</p>
             <input type="text" id="username" required>
@@ -28,55 +28,70 @@
             <h1>Please input background information here so we can match you appropriately</h1>
             <br>
             <form id="bginfo">
-              <p>Ethnicity (Please select all that apply)</p>
-              <br>
-              <div id='ethnicity'>
-                <input type='checkbox' name='ethnicity' value='African'>Black/Sub-Saharan African
-                <input type='checkbox' name='ethnicity' value='Asian'>East or Southeast Asian
-                <input type='checkbox' name='ethnicity' value='European'>European
-                <input type='checkbox' name='ethnicity' value='SouthAsian'>South Asian
-                <input type='checkbox' name='ethnicity' value='MidEastern'>Middle Eastern or North African
-                <input type='checkbox' name='ethnicity' value='NativeAmerican'>Native American/First Nations
-                <input type='checkbox' name='ethnicity' value='Other'>Other
-              </div>
-              <p>Language (Unfortunately we can only translate the following languages)</p>
-              <select id='language' required>
-                <option value='en'>English</option>
-                <option value='ar'>Arabic</option>
-                <option value='de'>German</option>
-                <option value='es'>Spanish/</option>
-                <option value='fr'>French</option>
-                <option value='it'>Italian</option>
-                <option value='pt'>Portugese</option>
-              </select>
-              <p>Gender</p>
-              <select id='gender' required>
-                <option value='Male'>Male</option>
-                <option value='Female'>Female</option>
-                <option value='Other'>Other</option>
-              </select>
-              <p>Sexual Orientation</p>
-              <select id='orientation' required>
-                <option value='Male'>Attracted mainly to Males</option>
-                <option value='Female'>Attracted mainly to Females</option>
-                <option value='Bisexual'>Bisexual</option>
-                <option value='Other'>Other</option>
-              </select>
-              <p>Religion</p>
-              <select id='religion' required>
-                <option value='Agnostic'>Agnostic</option>
-                <option value='Atheist'>Atheist</option>
-                <option value='Buddhist'>Buddhist</option>
-                <option value='Christian'>Christian</option>
-                <option value='Hindu'>Hindu</option>
-                <option value='Jewish'>Jewish</option>
-                <option value='Muslim'>Muslim</option>
-                <option value='Other Faith'>Other Faith</option>
-              </select>
-              <p>Age</p>
-              <input type="number" name="age" id="age" min="0" max="110" step="1" required>
-              <p>Twitter Account Name (If you have one)</p>
-              <input type="text" id="twitter">
+              <ul>
+                <li>
+                  Ethnicity (Please select all that apply)
+                  <ul id='ethnicity'>
+                    <li><input type='checkbox' name='ethnicity' value='African'>Black/Sub-Saharan African</li>
+                    <li><input type='checkbox' name='ethnicity' value='Asian'>East or Southeast Asian</li>
+                    <li><input type='checkbox' name='ethnicity' value='European'>European</li>
+                    <li><input type='checkbox' name='ethnicity' value='SouthAsian'>South Asian</li>
+                    <li><input type='checkbox' name='ethnicity' value='MidEastern'>Middle Eastern or North African</li>
+                    <li><input type='checkbox' name='ethnicity' value='NativeAmerican'>Native American/First Nations</li>
+                    <li><input type='checkbox' name='ethnicity' value='Other'>Other</li>
+                  </ul>
+                </li>
+                <li>
+                  Language (Unfortunately we can only translate the following languages)
+                  <select id='language' required>
+                    <option value='en'>English</option>
+                    <option value='ar'>Arabic</option>
+                    <option value='de'>German</option>
+                    <option value='es'>Spanish/</option>
+                    <option value='fr'>French</option>
+                    <option value='it'>Italian</option>
+                    <option value='pt'>Portugese</option>
+                  </select>
+                </li>
+                <li>
+                  Gender
+                  <select id='gender' required>
+                    <option value='Male'>Male</option>
+                    <option value='Female'>Female</option>
+                    <option value='Other'>Other</option>
+                  </select>
+                </li>
+                <li>
+                  Sexual Orientation
+                  <select id='orientation' required>
+                    <option value='Male'>Attracted mainly to Males</option>
+                    <option value='Female'>Attracted mainly to Females</option>
+                    <option value='Bisexual'>Bisexual</option>
+                    <option value='Other'>Other</option>
+                  </select>
+                </li>
+                <li>
+                  Religion
+                  <select id='religion' required>
+                    <option value='Agnostic'>Agnostic</option>
+                    <option value='Atheist'>Atheist</option>
+                    <option value='Buddhist'>Buddhist</option>
+                    <option value='Christian'>Christian</option>
+                    <option value='Hindu'>Hindu</option>
+                    <option value='Jewish'>Jewish</option>
+                    <option value='Muslim'>Muslim</option>
+                    <option value='Other Faith'>Other Faith</option>
+                  </select>
+                </li>
+                <li>
+                  Age
+                  <input type="number" name="age" id="age" min="0" max="110" step="1" required>
+                </li>
+                <li>
+                  Twitter Account Name (If you have one)
+                  <input type="text" id="twitter">
+                </li>
+              </ul>
               <br>
               <input type="submit" name="Make a new account">
               <input type="reset">
@@ -84,12 +99,7 @@
           </div>
         </div>
       </div>
-<!-- Hero footer: will stick at the bottom -->
-      <div class="hero-foot">
-        <p>Brought to you by PaleBlueDot</p>
-      </div>
     </section>
-  <!-- End of Hero section -->
   <script>
     $('#background').toggle()
     $('.removed').remove()

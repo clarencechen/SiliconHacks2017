@@ -1,3 +1,6 @@
+if (process.env.NODE_ENV !== 'production')
+	process.env = require('dotenv-safe').load().parsed
+
 const express = require('express'),
 		app = express(),
 		path = require('path'),
@@ -19,9 +22,12 @@ const sessionMiddleware = session({
 	secret: process.env.COOKIE_SECRET,
 	store: new pgSession({
 		pool: new pg.Pool({
-			connectionString: process.env.DATABASE_URL + '?sslmode=require',
+			connectionString: process.env.DATABASE_URL,
 			// Allow certificates signed from CAs outside of pre-authorized list
-			ssl: {rejectUnauthorized: false}
+			ssl: {
+				sslmode: 'require',
+				rejectUnauthorized: false
+			}
 		}),
 		createTableIfMissing: true
 		// errorLog:
@@ -45,7 +51,7 @@ const peerServer = require('peer').ExpressPeerServer(server, {debug: true})
 app.use('/call', peerServer)
 
 const port = process.env.PORT || 3000
-server.listen(PORT)
+server.listen(port)
 console.log("working on " + port)
 
 let counter = 0;

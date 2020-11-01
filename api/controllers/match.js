@@ -1,3 +1,6 @@
+if (process.env.NODE_ENV !== 'production')
+	process.env = require('dotenv-safe').load().parsed
+
 const db = require('./db.js')
 
 const checkAttrs = 'SELECT twitter, language, demographics AS dmgs FROM users WHERE username=$1'
