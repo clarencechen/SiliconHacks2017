@@ -1,5 +1,3 @@
-process.env = require('dotenv-safe').load().parsed
-
 const argon2 = require('argon2')
 
 const db = require('./db.js')

@@ -2,7 +2,7 @@
 node_modules/**
 
 # secret
-.env
+**.env
 
 # misc
 .DS_Store

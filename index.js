@@ -1,9 +1,6 @@
-process.env = require('dotenv-safe').load().parsed
-
 const express = require('express'),
 		app = express(),
 		path = require('path'),
-		port = 3000,
 		bodyParser = require('body-parser'),
 		pg = require('pg'),
 		session = require('express-session'),
@@ -30,7 +27,6 @@ const sessionMiddleware = session({
 		// errorLog:
 	})
 })
-
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 app.use(sessionMiddleware)
@@ -48,9 +44,10 @@ io.use((socket, next) => {
 const peerServer = require('peer').ExpressPeerServer(server, {debug: true})
 app.use('/call', peerServer)
 
-server.listen(process.env.PORT || port);
+const port = process.env.PORT || 3000
+server.listen(PORT)
+console.log("working on " + port)
 
-console.log("working on " + process.env.PORT);
 let counter = 0;
 io.on('connection', function(client) {
 	console.log(client.id + ' connected')
