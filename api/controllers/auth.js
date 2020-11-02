@@ -5,68 +5,73 @@ const argon2 = require('argon2')
 
 const db = require('./db.js')
 
-const checkLogin = 'SELECT hash FROM users WHERE username=$1'
+const checkLogin = "SELECT hash FROM users WHERE username=$1"
+const checkExists = "SELECT COUNT(*) FROM users WHERE username=$1"
 
 const insertUser = `INSERT INTO
-users(username, hash, twitter, language, demographics)
+users(username, hash, twitter, lang, demographics)
 VALUES($1, $2, $3, $4, $5)`
 
 //create new account and login
-async function create(data) {
+async function create(data, sess) {
 	try {
-		// hash password
-		const hash = await argon2.hash(data.pwd + process.env.SALT)
-		const success = db.query(insertUser, [
-			data.user,
-			hash,
-			data.tw,
-			data.lang,
-			data.dmgs])
-		const response = await login(data.user, data.pwd)
-		return response
+		if (((data.id.length || 0) < 3) || ((data.lang.length || 0) < 2) || !data.dmgs) {
+			return {success: false, reason: 'Malformed request, please try again.'}
+		} else if ((data.pwd.length || 0) < 8) {
+			return {success: false, reason: 'Passwords need to be at least 8 characters in length, please try again.'}
+		} else {
+			const { rows } = await db.query(checkExists, [data.id])
+			if (rows[0].count > 0)
+				return {success: false, reason: 'Account already exists, please login with existing account.'}
+			// hash password
+			const hash = await argon2.hash(data.pwd + process.env.SALT)
+			const s = await db.query(insertUser, [data.id, hash,
+				data.tw, data.lang, data.dmgs])
+			const response = await login(data.id, data.pwd, sess)
+			return response
+		}
 	} catch(e) {
-		throw e
+		return {success: false, reason: e.message}
 	}
 }
 
 //login
-async function login(sess, id, pwd) {
+async function login(id, pwd, sess) {
 	try {
-		const { rows } = db.query(checkLogin, [id])
+		const { rows } = await db.query(checkLogin, [id])
 		// check hash
 		if(rows.length < 1)
-			return false
+			return {success: false, reason: 'Invalid username or password'}
 		const success = await argon2.verify(rows[0].hash, pwd + process.env.SALT)
+		let res = {success: success}
 		if(success)
 			sess.user = id
-		return success
+		else
+			res.reason = 'Invalid username or password'
+		return res
 	} catch(e) {
-		throw e 
+		return {success: false, reason: e.message}
 	}
 }
 
 //TODO: logout from all user sessions
 
 exports.new_user = function(req, res) {
-	console.log("Creating user" + req.body.user)
+	console.log("Creating user " + req.body.id)
 	// TODO: sanitize input
-	create(req.body)
-		.then((out) => res.json({success: out}))
+	create(req.body, req.session)
+		.then((out) => res.json(out))
 		.catch((e) => res.status(500).json(e))
 }
 
 exports.get_user = function(req, res) {
-	login(req.session, req.body.username, req.body.password)
-		.then((out) => res.json({success: out}))
+	login(req.body.username, req.body.password, req.session)
+		.then((out) => res.json(out))
 		.catch((e) => res.status(500).json(e))
 }
 
 //logout from current session
 exports.logout = function(req, res) {
-	if(req.session && req.session.user) {
-		delete req.session.user
+	delete req.session.user
 		return res.json({success: true})
-	} else {
-		return res.json({success: false})
-	}
 }

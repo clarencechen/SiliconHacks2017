@@ -36,7 +36,7 @@ $(document).ready(function() {
 				if(res.success)
 					window.location.replace("chat.html")
 				else
-					alert('Could not create account, please try again.')
+					alert(res.reason || 'Could not create account, please try again.')
 			},
 			error: (err) => {console.log(JSON.stringify(err))}
 		})

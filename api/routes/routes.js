@@ -1,6 +1,7 @@
 'use strict';
 
 function authenticate(req, res, next) {
+	console.log(JSON.stringify(req.session))
 	if(req.session && req.session.user)
 		next()
 	else

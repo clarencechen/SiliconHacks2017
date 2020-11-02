@@ -15,7 +15,7 @@ const sessionMiddleware = session({
 		httpOnly: true,
 		maxAge: parseInt(process.env.SESSION_LIFESPAN),
 		sameSite: 'strict',
-		secure: true
+		secure: (process.env.NODE_ENV === 'production')
 	},
 	resave: false,
 	saveUninitialized: false,
@@ -33,6 +33,8 @@ const sessionMiddleware = session({
 		// errorLog:
 	})
 })
+if (process.env.NODE_ENV === 'production')
+	app.set('trust proxy', 1)
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 app.use(sessionMiddleware)

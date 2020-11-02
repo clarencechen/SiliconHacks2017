@@ -23,10 +23,10 @@ $(document).ready(function() {
 		url: 'https://cit-i-zen.herokuapp.com:443/client/info',
 		data: {},
 		success: (res) => {
-			window.localStorage.setItem('language', res.language)
+			window.localStorage.setItem('language', res.lang)
 			const ethString = ethArr.filter((i, e) => res.ethnicity & (1 << i)).join(', ')
 			$('#name').text(res.username)
-			$('#language').text(res.language)
+			$('#language').text(res.lang)
 			$('#gender').text(res.gender)
 			$('#age').text(res.age)
 			$('#religion').text(res.religion)

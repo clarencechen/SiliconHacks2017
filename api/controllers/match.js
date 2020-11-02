@@ -1,15 +1,12 @@
-if (process.env.NODE_ENV !== 'production')
-	process.env = require('dotenv-safe').load().parsed
-
 const db = require('./db.js')
 
-const checkAttrs = 'SELECT twitter, language, demographics AS dmgs FROM users WHERE username=$1'
+const checkAttrs = "SELECT twitter, lang, demographics AS dmgs FROM users WHERE username=$1"
 
 const findMatch = 'SELECT socket FROM queue WHERE demographics<>$1 ORDER BY insert_time ASC'
 const insertMatch = `INSERT INTO
 queue(demographics, socket, insert_time)
 VALUES($1, $2, $3)`
-const deleteMatch = 'DELETE FROM queue WHERE socket=$1'
+const deleteMatch = "DELETE FROM queue WHERE socket=$1"
 
 //request user info
 async function info(username) {
@@ -18,7 +15,7 @@ async function info(username) {
 		let response = {
 			'username': username,
 			'twitter': rows[0].twitter,
-			'language': rows[0].language
+			'lang': rows[0].lang
 		}
 		for(x in rows[0].dmgs) {
 			response[x] = rows[0].dmgs[x]
