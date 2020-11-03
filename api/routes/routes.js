@@ -1,7 +1,6 @@
 'use strict';
 
 function authenticate(req, res, next) {
-	console.log(JSON.stringify(req.session))
 	if(req.session && req.session.user)
 		next()
 	else
@@ -9,26 +8,27 @@ function authenticate(req, res, next) {
 }
 
 module.exports = function(app) {
-	var translate = require('../controllers/translate.js')
-	var auth = require('../controllers/auth.js')
-	var match = require('../controllers/match.js')
+	const options = {root: '/app/public'}
+	const translate = require('../controllers/translate.js')
+	const auth = require('../controllers/auth.js')
+	const match = require('../controllers/match.js')
 
 	app.route('/').get((req, res, next) => {
 		//main page
 		if(req.session && req.session.user)
-			res.redirect('/chat.html')
+			res.sendFile('chat.html', options)
 		else
-			res.redirect('/login')
+			res.sendFile('login.html', options)
 	})
 	//authentication required for these endpoints
 	app.route('/client/*').all(authenticate)
 	app.route('/chat.html').all(authenticate)
 	//public api
 	app.route('/login')
-	.get((req, res) => res.redirect('/login.html'))
+	.get((req, res) => res.sendFile('login.html', options))
 	.post(auth.get_user)
 	app.route('/signup')
-	.get((req, res) => res.redirect('/signup.html'))
+	.get((req, res) => res.sendFile('signup.html', options))
 	.post(auth.new_user)
 	app.route('/logout')
 	.post(auth.logout)

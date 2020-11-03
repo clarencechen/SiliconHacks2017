@@ -6,17 +6,13 @@ function display(remote) {
 	video.onloadedmetadata = (e) => {video.play()}
 }
 
-function call(peerid, $c) {
-	mediapromise = navigator.mediaDevices.getUserMedia({audio : true, video : true})
-	if(mediapromise !== null) {
-		console.log("Currently in call, please hang up before making another call.")
-		return
-	}
+function call(peerid) {
+	mediapromise = mediapromise || navigator.mediaDevices.getUserMedia({audio : true, video : true})
 	mediapromise.then((stream) => {
 		stream.getVideoTracks()[0].enabled = !$('#novideo').checked
 		stream.getAudioTracks()[0].enabled = !$('#mute').checked
 		// Initiate media call with our MediaStream
-		$('#call').prop('disabled', 'disabled')
+		$('#call').prop('disabled', true)
 		$('#call').text("Connecting to peer...")
 		var call = peer.call(peerid, stream)
 		// Set timeout in case peer does not answer
@@ -28,7 +24,7 @@ function call(peerid, $c) {
 		}, 10000)
 		setCallControls(call)
 		call.on('stream', (remote) => {
-			$c.find('.messages').append(
+			$('.messages').append(
 				'<div><span class="you">You: </span>Started a call with ' + peerid + '</div>')
 			$('#call').text('End Call')
 			$('#call').removeProp('disabled')
@@ -38,9 +34,7 @@ function call(peerid, $c) {
 }
 
 function answer(call) {
-	if(mediapromise === null) {
-		mediapromise = navigator.mediaDevices.getUserMedia({audio : true, video : true})
-	}
+	mediapromise = mediapromise || navigator.mediaDevices.getUserMedia({audio : true, video : true})
 	mediapromise.then((stream) => {
 		stream.getVideoTracks()[0].enabled = !$('#novideo').checked
 		stream.getAudioTracks()[0].enabled = !$('#mute').checked
@@ -61,7 +55,7 @@ function hangup(abnormal) {
 
 function mediaError(err) {
 	mediapromise = null
-	$('#call').prop('disabled', 'disabled')
+	$('#call').prop('disabled', true)
 	$('#call').text("Please allow camera and microphone permissions if you want to call your match.")
 }
 

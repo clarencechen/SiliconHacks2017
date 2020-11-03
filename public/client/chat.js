@@ -1,9 +1,10 @@
 //Initializes Chatbox
 function setUpChatbox(conn) {
 	// Register connection in connections list.
-	connections[conn.peer] = conn
+	const peerid = conn.peer
+	connections[peerid] = conn
 	// Take down chatbox for former participant.
-	conn.on('close', () => {disconnectChat(conn.peer)})
+	conn.on('close', () => {disconnectChat(peerid)})
 	// Close connection.
 	$('#close').on('click', (e) => {shutdown()})
 	// Receive chat message from a peer.
@@ -20,9 +21,16 @@ function setUpChatbox(conn) {
 	$('#call').on('click', (e) => {sendToActive(call, [])})
 	// Receive call from a peer.
 	peer.on('call', answer)
-
-	let chatbox = $('#chatbox').addClass('connection').addClass('active').attr('id', conn.peer)
-	let message = $('<div><em>' + conn.peer + ' has joined the room.</em></div>').addClass('messages')
+	// Toggle active contacts
+	$('.connection').on('click', () => {
+		if ($(this).attr('class').indexOf('active') === -1)
+			$(this).addClass('active')
+		else
+			$(this).removeClass('active')
+	})
+	
+	let chatbox = $('#chatbox').addClass('connection').addClass('active').attr('id', peerid)
+	let message = $('<div><em>' + peerid + ' has joined the room.</em></div>').addClass('messages')
 	chatbox.append(message)
 	enableFeatures()
 }
@@ -30,17 +38,17 @@ function setUpChatbox(conn) {
 function disconnectChat(peerid) {
 	let message = $('<div><em>' + peerid + ' has left the room.</em></div>').addClass('messages')
 	$('#chatbox').append(message)
-	$('.connection').filter((i, e) => ($(e).attr('id') === peerid)).remove()
+	$('.connection').filter((e, i) => ($(e).attr('id') === peerid)).remove()
 	delete connections[peerid]
 }
 
-function sendChat(peerid, $c, msg) {
+function sendChat(peerid, msg) {
 	connections[peerid].send({
 		id : peerid,
 		text : msg,
 		lang : window.localStorage.language
 	})
-	$c.find('.messages').append('<div><span class="you">You: </span>' + msg + '</div>')
+	$('.messages').append('<div><span class="you">You: </span>' + msg + '</div>')
 	$('#text').val('')
 	$('#text').focus()
 }
@@ -73,10 +81,10 @@ function receiveChat(data) {
 // Goes through each active peer and calls fn on its active connections with the array args.
 function sendToActive(fn, args) {
 	let checkedIds = {}
-	$('.active').each(() => {
-		let peerid = $(this).attr('id')
+	$('.active').each((i, e) => {
+		let peerid = $(e).attr('id')
 		if (!checkedIds[peerid] && connections[peerid])
-			fn(peerid, $(this), ...args)
+			fn(peerid, ...args)
 		checkedIds[peerid] = true
 	})
 }
