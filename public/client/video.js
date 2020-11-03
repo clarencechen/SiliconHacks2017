@@ -1,7 +1,7 @@
 mediapromise = null
 
 function display(remote) {
-	var video = document.querySelector('video')
+	const video = document.querySelector('video')
 	video.srcObject = remote
 	video.onloadedmetadata = (e) => {video.play()}
 }
@@ -23,13 +23,7 @@ function call(peerid) {
 			}
 		}, 10000)
 		setCallControls(call)
-		call.on('stream', (remote) => {
-			$('.messages').append(
-				'<div><span class="you">You: </span>Started a call with ' + peerid + '</div>')
-			$('#call').text('End Call')
-			$('#call').removeProp('disabled')
-			display(remote)
-		})
+		call.on('stream', display)
 	}).catch(mediaError)
 }
 
@@ -39,16 +33,16 @@ function answer(call) {
 		stream.getVideoTracks()[0].enabled = !$('#novideo').checked
 		stream.getAudioTracks()[0].enabled = !$('#mute').checked
 		call.answer(stream)
-		setCallControls(call)
+		setCallControls(call, stream)
 		call.on('stream', display)
-		$('#call').text('End Call')
-		$('#call').removeProp('disabled')
 	}).catch(mediaError)
 }
 
 function hangup(abnormal) {
-	mediapromise = null
-	$('#call').on('click', (e) => {sendToActive(call)})
+	const video = document.querySelector('video')
+	video.pause()
+	delete video.srcObject
+	$('#call').on('click', (e) => {sendToActive(call, [])})
 	const callText = abnormal ? "Call Failed, Click to Retry" : "Video Call"
 	$('#call').text(callText)
 }
@@ -61,8 +55,12 @@ function mediaError(err) {
 
 function setCallControls(call) {
 	call.on('err', (err) => {console.error(err);hangup(true)})
-	$('#call').on('click', (e) => {call.close();hangup(false)})
 	call.on('close', () => {hangup(false)})
 	$('#novideo').change((e) => {stream.getVideoTracks()[0].enabled = !this.checked})
 	$('#mute').change((e) => {stream.getAudioTracks()[0].enabled = !this.checked})
+	$('#chatbox').append(
+		'<div><span class="you">You: </span>Started a call with ' + call.peer + '</div>')
+	$('#call').on('click', (e) => {call.close();hangup(false)})
+	$('#call').text('End Call')
+	$('#call').removeProp('disabled')
 }

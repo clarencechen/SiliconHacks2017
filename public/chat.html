@@ -3,6 +3,7 @@
   <head title="CITiZEN">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
     <link rel="stylesheet" id="bulma" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.3.2/css/bulma.min.css" />
+    <link rel="stylesheet" type="text/css" href="./css/fancy.css">
     <link rel="stylesheet" type="text/css" href="./css/login.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
@@ -37,7 +38,7 @@
 
       <!-- Hero content: will be in the middle -->
       <div class="hero-body">
-        <div cid="chat" lass="container has-text-centered">
+        <div cid="chat" lass="container">
             <br>
             <button id='connect'>Connect</button>
             <button disabled id='close'>No Connections to Close</button>
@@ -53,13 +54,13 @@
             <div id="video">
               <video autoplay></video>
               <div class="actions">
-                <p><input disabled type="checkbox" name="Audio Only" id="novideo">Audio Only</p>
-                <p><input disabled type="checkbox" name="Mute" id="mute">Mute</p>
+                <p><input type="checkbox" name="Audio Only" id="novideo">Audio Only</p>
+                <p><input type="checkbox" name="Mute" id="mute">Mute</p>
                 <button disabled id="call">Connect Before Calling</button>
               </div>
             </div>
             <br>
-        </div> <!-- End #chat div -->
+        </div>
       </div>
 </div>
 

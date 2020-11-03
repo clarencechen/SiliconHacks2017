@@ -9,7 +9,7 @@ $(document).ready(function() {
 			},
 			success: (res) => {
 				if(res.success)
-					window.location.replace("chat.html")
+					window.location.replace("/")
 				else
 					alert('Incorrect username or password.')
 			},

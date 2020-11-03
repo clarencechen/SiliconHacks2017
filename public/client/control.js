@@ -18,27 +18,19 @@ const ethArr = [
 ]
 
 function enableFeatures() {
-	$('#connect').text('Connection Found')
-	$('#connect').prop('disabled', true)
-	$('#close').removeProp('disabled')
-	$('#close').text('Close Connection') 
-	$('#call').removeProp('disabled')
-	$('#call').text('Videocall')
-	$('#send').removeProp('disabled')
-	$('#send').text('Send Message')
+	$('#connect').prop('disabled', true).text('Connection Found')
+	$('#close').removeProp('disabled').text('Close Connection') 
 	$('#text').removeProp('disabled')
+	$('#send').removeProp('disabled').val('Send Message')
+	$('#call').removeProp('disabled').text('Video Call')
 }
 
 function disableFeatures() {
+	$('#call').prop('disabled', true).text('Connect Before Calling')
+	$('#send').prop('disabled', true).val('Connect Before Messaging')
 	$('#text').prop('disabled', true)
-	$('#call').prop('disabled', true)
-	$('#call').text('Connect Before Calling')
-	$('#send').prop('disabled', true)
-	$('#send').text('Connect Before Messaging')
-	$('#close').prop('disabled', true)
-	$('#close').text('No Connections to Close') 
-	$('#connect').removeProp('disabled')
-	$('#connect').text('Connect')
+	$('#close').prop('disabled', true).text('No Connections to Close') 
+	$('#connect').removeProp('disabled').text('Connect')
 }
 
 function shutdown() {
@@ -49,8 +41,7 @@ function shutdown() {
 	})
 	connections = {}
 	peer.destroy()
-	$('#connect').prop('disabled', true)
-	$('#connect').text('Please Refresh to Reconnect')
+	$('#connect').prop('disabled', true).text('Please Refresh to Reconnect')
 }
 
 function fatalError(err) {
@@ -110,7 +101,6 @@ $(document).ready(function() {
 	})
 	// Set up chatbox for new chat participant.
 	peer.on('connection', (conn) => {
-		$('#connect').prop('disabled', true)
 		if (!connections[conn.peer]) {
 			conn.on('open', () => setUpChatbox(conn))
 			conn.on('error', fatalError)
