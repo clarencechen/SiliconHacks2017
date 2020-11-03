@@ -13,7 +13,7 @@ $(document).ready(function() {
 				else
 					alert('Incorrect username or password.')
 			},
-			error: (err) => {console.log(JSON.stringify(err))}
+			error: console.error
 		})
 	})
 })

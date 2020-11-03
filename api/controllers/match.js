@@ -33,7 +33,7 @@ async function match(username, socket) {
 		if(matches.length < 1) {
 			const now = new Date().getTime()
 			const r = await db.query(insertMatch, [rows[0].dmgs, socket, now])
-			return 'wait'
+			return {id: null}
 		} else {
 			const r = await db.query(deleteMatch, [matches[0].socket])
 			return {id: matches[0].socket}

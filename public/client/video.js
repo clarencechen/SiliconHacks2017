@@ -1,5 +1,4 @@
-var peer = null
-var mediapromise = null
+mediapromise = null
 
 function display(remote) {
 	var video = document.querySelector('video')
@@ -7,108 +6,69 @@ function display(remote) {
 	video.onloadedmetadata = (e) => {video.play()}
 }
 
-function peerLog() {
-	var copy = Array.prototype.slice.call(arguments).join(' ')
-	$('.log').append(copy + '<br>')
-}
-
-function connectForCall(peerid) {
+function call(peerid, $c) {
+	mediapromise = navigator.mediaDevices.getUserMedia({audio : true, video : true})
 	if(mediapromise !== null) {
-		console.log("already in call")
+		console.log("Currently in call, please hang up before making another call.")
 		return
 	}
-	peer = new Peer(socket.id, {
-		host: '/',
-		port: '',
-		path: '/call',
-		debug: 1,
-		logFunction: peerLog
-	})
-	mediapromise = navigator.mediaDevices.getUserMedia({audio : true, video : true})
 	mediapromise.then((stream) => {
 		stream.getVideoTracks()[0].enabled = !$('#novideo').checked
 		stream.getAudioTracks()[0].enabled = !$('#mute').checked
 		// Initiate media call with our MediaStream
 		$('#call').prop('disabled', 'disabled')
 		$('#call').text("Connecting to peer...")
-		socket.emit('call')
-		// Initiate media call with our MediaStream
-		socket.on('answered', () => {call(peerid, stream)})
-		socket.on('failed', mediaError)
+		var call = peer.call(peerid, stream)
+		// Set timeout in case peer does not answer
+		window.setTimeout(() => {
+			if(!call.open) {
+				call.close()
+				hangup(true)
+			}
+		}, 10000)
+		setCallControls(call)
+		call.on('stream', (remote) => {
+			$c.find('.messages').append(
+				'<div><span class="you">You: </span>Started a call with ' + peerid + '</div>')
+			$('#call').text('End Call')
+			$('#call').removeProp('disabled')
+			display(remote)
+		})
 	}).catch(mediaError)
 }
 
-function answer() {
-	if(mediapromise !== null) {
-		console.log("already in call")
-		return
+function answer(call) {
+	if(mediapromise === null) {
+		mediapromise = navigator.mediaDevices.getUserMedia({audio : true, video : true})
 	}
-	peer = new Peer(socket.id, {
-		host: '/',
-		port: '',
-		path: '/call',
-		debug: 1,
-		logFunction: peerLog
-	})
-	mediapromise = navigator.mediaDevices.getUserMedia({audio : true, video : true})
 	mediapromise.then((stream) => {
 		stream.getVideoTracks()[0].enabled = !$('#novideo').checked
 		stream.getAudioTracks()[0].enabled = !$('#mute').checked
-
-		$('#call').prop('disabled', 'disabled')
-		$('#call').text("Waiting for call from peer...")
-		socket.emit('answered')
-		// Answer the call, providing our MediaStream
-		peer.on('call', (call) => pickup(call, stream))
-	}).catch((err) => {
-		mediaError(err)
-		socket.emit('failed', {name : 'PeerMediaError', message : 'Your peer encountered a media error.'})
-	})
-}
-
-function call(peerid, stream) {
-	var call = peer.call(peerid, stream)
-	setCallControls(call)
-	call.on('stream', (remote) => {
-		$('#call').text('End Call')
+		call.answer(stream)
+		setCallControls(call)
+		call.on('stream', display)
+		$('#call').text('End call')
 		$('#call').removeProp('disabled')
-		display(remote)
-	})
+	}).catch(mediaError)
 }
 
-function pickup(call, stream) {
-	call.answer(stream)
-	setCallControls(call)
-	call.on('stream', display)
-	$('#call').text('End call')
-	$('#call').removeProp('disabled')
-}
-
-function hangup() {
+function hangup(abnormal) {
 	mediapromise = null
-	$('#call').prop('disabled', 'disabled')
-	$('#call').text("Call ended")
-}
-
-function callError(err){
-	mediapromise = null
-	console.log(err)
-	$('#call').prop('disabled', 'disabled')
-	$('#call').text("Call failed")
+	$('#call').on('click', (e) => {sendToActive(call)})
+	const callText = abnormal ? "Call Failed, Click to Retry" : "Video Call"
+	$('#call').text(callText)
 }
 
 function mediaError(err) {
 	mediapromise = null
-	peer.destroy()
-	console.log(err.name + ": " + err.message)
 	$('#call').prop('disabled', 'disabled')
-	$('#call').text("Couldn't connect to peer")
+	$('#call').text("Please allow camera and microphone permissions if you want to call your match.")
 }
 
 function setCallControls(call) {
-	call.on('err', callError)
-	$('body').on('click', '#call', (e) => {call.close()})
-	call.on('close', hangup)
+	call.on('err', (err) => {console.error(err);hangup(true)})
+	$('#call').on('click', (e) => {call.close();hangup(false)})
+	call.on('close', () => {hangup(false)})
 	$('#novideo').change((e) => {stream.getVideoTracks()[0].enabled = !this.checked})
 	$('#mute').change((e) => {stream.getAudioTracks()[0].enabled = !this.checked})
 }

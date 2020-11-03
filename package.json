@@ -27,7 +27,6 @@
     "heroku-ssl-redirect": "0.0.4",
     "peer": "^0.5.3",
     "pg": "^8.4.2",
-    "socket.io": "^2.3.0",
     "twitter": "^1.7.0",
     "watson-developer-cloud": "^2.31.1"
   },

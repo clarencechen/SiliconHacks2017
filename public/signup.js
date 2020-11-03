@@ -38,7 +38,7 @@ $(document).ready(function() {
 				else
 					alert(res.reason || 'Could not create account, please try again.')
 			},
-			error: (err) => {console.log(JSON.stringify(err))}
+			error: console.error
 		})
 	})
 })
