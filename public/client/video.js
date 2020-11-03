@@ -41,7 +41,7 @@ function answer(call) {
 		call.answer(stream)
 		setCallControls(call)
 		call.on('stream', display)
-		$('#call').text('End call')
+		$('#call').text('End Call')
 		$('#call').removeProp('disabled')
 	}).catch(mediaError)
 }

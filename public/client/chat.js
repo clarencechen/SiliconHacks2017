@@ -6,7 +6,11 @@ function setUpChatbox(conn) {
 	// Take down chatbox for former participant.
 	conn.on('close', () => {disconnectChat(peerid)})
 	// Close connection.
-	$('#close').on('click', (e) => {shutdown()})
+	$('#close').on('click', (e) => {
+		disableFeatures()
+		conn.close()
+		connections = {}
+	})
 	// Receive chat message from a peer.
 	conn.on('data', receiveChat)
 	// Send a chat message to all active connections.

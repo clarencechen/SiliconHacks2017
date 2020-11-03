@@ -26,13 +26,15 @@ function enableFeatures() {
 	$('#call').text('Videocall')
 	$('#send').removeProp('disabled')
 	$('#send').text('Send Message')
+	$('#text').removeProp('disabled')
 }
 
 function disableFeatures() {
+	$('#text').prop('disabled', true)
 	$('#call').prop('disabled', true)
-	$('#call').text('Connect First before calling')
+	$('#call').text('Connect Before Calling')
 	$('#send').prop('disabled', true)
-	$('#send').text('Connect First before messaging')
+	$('#send').text('Connect Before Messaging')
 	$('#close').prop('disabled', true)
 	$('#close').text('No Connections to Close') 
 	$('#connect').removeProp('disabled')
@@ -46,8 +48,9 @@ function shutdown() {
 			connections[id].close()
 	})
 	connections = {}
-	mediapromise = null
 	peer.destroy()
+	$('#connect').prop('disabled', true)
+	$('#connect').text('Please Refresh to Reconnect')
 }
 
 function fatalError(err) {
