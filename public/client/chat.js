@@ -2,14 +2,10 @@
 function setUpChatbox(conn) {
 	// Register connection in connections list.
 	const peerid = conn.peer
-	connections[peerid] = conn
 	// Take down chatbox for former participant.
-	conn.on('close', () => {disconnectChat(peerid)})
-	// Close connection.
-	$('#close').on('click', (e) => {
-		disableFeatures()
-		conn.close()
-		connections = {}
+	conn.on('close', () => {
+		disableCallFeatures(peerid)
+		disableChatFeatures(peerid)
 	})
 	// Receive chat message from a peer.
 	conn.on('data', receiveChat)
@@ -19,35 +15,49 @@ function setUpChatbox(conn) {
 		// For each active connection, send the message.
 		const msg = $('#text').val()
 		if(msg) 
-			sendToActive(sendChat, [msg])
+			sendChat(conn, msg)
 	})
 	// Call a peer.
-	$('#call').on('click', (e) => {sendToActive(call, [])})
+	$('#call').on('click.call', (e) => {call(peerid)})
 	// Receive call from a peer.
 	peer.on('call', answer)
-	// Toggle active contacts
-	$('.connection').on('click', () => {
-		if ($(this).attr('class').indexOf('active') === -1)
-			$(this).addClass('active')
-		else
-			$(this).removeClass('active')
-	})
-	
-	let chatbox = $('#chatbox').addClass('connection').addClass('active').attr('peer', peerid)
-	let message = $('<div><em>' + peerid + ' has joined the chat.</em></div>').addClass('messages')
-	chatbox.append(message)
-	enableFeatures()
+	enableChatFeatures(conn)
 }
 
-function disconnectChat(peerid) {
-	$('#chatbox').append('<div><em>' + peerid + ' has left the chat.</em></div>')
-	$('.connection').filter((e, i) => ($(e).attr('peer') === peerid)).remove()
-	delete connections[peerid]
+function enableChatFeatures(conn) {
+	$('#connect').prop('disabled', false).text('Close Connection').addClass('is-danger')
+	$('#connect').off('click.connect').on('click.close', (e) => {conn.close()})
+
+	$('#text').prop('disabled', false)
+	$('#send').prop('disabled', false).val('Send Message')
+	$('#call').prop('disabled', false).text('Video Call')
+
+	let message = $('<div><em>' + conn.peer + ' has joined the chat.</em></div>').addClass('important')
+	$('#chatbox').append(message)
 }
 
-function sendChat(peerid, msg) {
-	connections[peerid].send({
-		id : peerid,
+function disableChatFeatures(peerid) {
+	var message;
+	if(peerid)
+		message = $('<div><em>' + peerid + ' has left the chat.</em></div>').addClass('important')
+	else
+		message = $('<div><em>Your chat client has been disconnected.</em></div>').addClass('important')
+	$('#chatbox').append(message)		
+
+	$('#call').off('click').prop('disabled', true).text('Connect Before Calling')
+	$('#send').off('click').prop('disabled', true).val('Connect Before Messaging')
+	$('#text').prop('disabled', true)
+
+	const connectText = peerid ? 'Connect' : 'Please Refresh to Reconnect'
+	$('#connect').prop('disabled', !peerid).text(connectText).removeClass('is-danger')
+	$('#connect').off('click.close')
+	if (peerid)
+		$('#connect').on('click.connect', (e) => {findmatch()})
+}
+
+function sendChat(conn, msg) {
+	conn.send({
+		id : conn.peer,
 		text : msg,
 		lang : window.localStorage.language
 	})
@@ -56,7 +66,7 @@ function sendChat(peerid, msg) {
 }
 
 function receiveChat(data) {
-	$('#chatbox').append('<div><p><span>' + data.id + ': </span>' + data.text + '</p>')
+	$('#chatbox').append('<div><p><span class="peer">' + data.id + ': </span>' + data.text + '</p>')
 	if(window.localStorage.language !== data.lang) {
 		$.ajax({
 			type: 'POST',
@@ -78,15 +88,4 @@ function receiveChat(data) {
 	} else {
 		$('#chatbox').append('</div>')
 	}
-}
-
-// Goes through each active peer and calls fn on its active connections with the array args.
-function sendToActive(fn, args) {
-	let checkedIds = {}
-	$('.active').each((i, e) => {
-		let peerid = $(e).attr('peer')
-		if (!checkedIds[peerid] && connections[peerid])
-			fn(peerid, ...args)
-		checkedIds[peerid] = true
-	})
 }

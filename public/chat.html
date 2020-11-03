@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 <html>
   <head title="CITiZEN">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
-    <link rel="stylesheet" id="bulma" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.3.2/css/bulma.min.css" />
-    <link rel="stylesheet" type="text/css" href="./css/fancy.css">
-    <link rel="stylesheet" type="text/css" href="./css/login.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
-    <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
-    <script src="https://unpkg.com/peerjs@1.3.0/dist/peerjs.min.js"></script>
+    <script src="https://unpkg.com/peerjs@1.2.0/dist/peerjs.min.js"></script>
+    <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+    <link rel="stylesheet" type="text/css" href="./css/fancy.css">
+    <link rel="stylesheet" type="text/css" href="./css/sidenav.css">
     <script src="./client/control.js"></script>
     <script src="./client/chat.js"></script>
     <script src="./client/video.js"></script>
@@ -39,14 +41,14 @@
       <!-- Hero content: will be in the middle -->
       <div class="hero-body">
         <div cid="chat" lass="container">
-            <br>
-            <button id='connect'>Connect</button>
-            <button disabled id='close'>No Connections to Close</button>
+            <button id="connect" class="button">Connect</button>
             <div id="textchat">
-              <br>
               <form id="chatinput">
-                <input disabled type="text" id="text" placeholder="Enter message">
-                <input disabled id ="send" class="button" type="submit" value="Connect Before Messaging">
+                <div class="field">
+                  <div class="control">
+                    <input disabled type="text" id="text" placeholder="Enter message">
+                    <input disabled id="send" class="button" type="submit" value="Connect Before Messaging">
+                </div>
               </form>
               <br>
               <div id="chatbox"></div>
@@ -54,9 +56,10 @@
             <div id="video">
               <video autoplay></video>
               <div class="actions">
-                <p><input type="checkbox" name="Audio Only" id="novideo">Audio Only</p>
-                <p><input type="checkbox" name="Mute" id="mute">Mute</p>
-                <button disabled id="call">Connect Before Calling</button>
+                <label class="checkbox">Audio Only<input type="checkbox" id="novideo"></label>
+                <label class="checkbox">Mute<input type="checkbox" id="mute"></label>
+                <p>Volume<input type="range" min="0" max="100" value="100" step="1" id="volume"></p>
+                <button disabled id="call" class="button">Connect Before Calling</button>
               </div>
             </div>
             <br>
@@ -68,7 +71,7 @@
 
 <!-- End of Hero section -->
 
-<div id="sidebar" class="login-wrapper columns sidenav">
+<div id="sidebar" class="columns sidenav">
   <div class="column is-9 is-hidden-mobile hero-banner"></div>
   <div class="column is-3">
     <section class="hero is-fullheight">

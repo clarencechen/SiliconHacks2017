@@ -2,13 +2,12 @@
 <html>
   <head title="CITiZEN">
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
-    <link rel="stylesheet" id="bulma" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.3.2/css/bulma.min.css" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
-    <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="./css/login.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+    <link rel="stylesheet" type="text/css" href="./css/fancy.css">
     <script src="signup.js"></script>
   </head>
 
@@ -19,82 +18,125 @@
         <div class="container">
           <div id="account" >
             <p>Username</p>
-            <input type="text" id="username" required>
+            <input class="input email-input" type="text" id="username" required>
             <p>Password</p>
-            <input type="password" id="password" required>
-            <button id="advance">Next</button>
+            <input class="input password-input" type="password" id="password" required>
+            <button id="advance" class="button is-info is-outlined">Next</button>
           </div>
           <div id="background">
             <h1>Please input background information here so we can match you appropriately</h1>
             <br>
             <form id="bginfo">
-              <ul>
-                <li>
-                  Ethnicity (Please select all that apply)
-                  <ul id='ethnicity'>
-                    <li><input type='checkbox' name='ethnicity' value='African'>Black/Sub-Saharan African</li>
-                    <li><input type='checkbox' name='ethnicity' value='Asian'>East or Southeast Asian</li>
-                    <li><input type='checkbox' name='ethnicity' value='European'>European</li>
-                    <li><input type='checkbox' name='ethnicity' value='SouthAsian'>South Asian</li>
-                    <li><input type='checkbox' name='ethnicity' value='MidEastern'>Middle Eastern or North African</li>
-                    <li><input type='checkbox' name='ethnicity' value='NativeAmerican'>Native American/First Nations</li>
-                    <li><input type='checkbox' name='ethnicity' value='Other'>Other</li>
-                  </ul>
-                </li>
-                <li>
-                  Language (Unfortunately we can only translate the following languages)
-                  <select id='language' required>
-                    <option value='en'>English</option>
-                    <option value='ar'>Arabic</option>
-                    <option value='de'>German</option>
-                    <option value='es'>Spanish</option>
-                    <option value='fr'>French</option>
-                    <option value='it'>Italian</option>
-                    <option value='pt'>Portugese</option>
-                  </select>
-                </li>
-                <li>
-                  Gender
-                  <select id='gender' required>
-                    <option value='Male'>Male</option>
-                    <option value='Female'>Female</option>
-                    <option value='Other'>Other</option>
-                  </select>
-                </li>
-                <li>
-                  Sexual Orientation
-                  <select id='orientation' required>
-                    <option value='Male'>Attracted mainly to Males</option>
-                    <option value='Female'>Attracted mainly to Females</option>
-                    <option value='Bisexual'>Bisexual</option>
-                    <option value='Other'>Other</option>
-                  </select>
-                </li>
-                <li>
-                  Religion
-                  <select id='religion' required>
-                    <option value='Agnostic'>Agnostic</option>
-                    <option value='Atheist'>Atheist</option>
-                    <option value='Buddhist'>Buddhist</option>
-                    <option value='Christian'>Christian</option>
-                    <option value='Hindu'>Hindu</option>
-                    <option value='Jewish'>Jewish</option>
-                    <option value='Muslim'>Muslim</option>
-                    <option value='Other Faith'>Other Faith</option>
-                  </select>
-                </li>
-                <li>
-                  Age
-                  <input type="number" name="age" id="age" min="0" max="110" step="1" required>
-                </li>
-                <li>
-                  Twitter Account Name (If you have one)
-                  <input type="text" id="twitter">
-                </li>
-              </ul>
+              <div class="field">
+                <div class="label">Ethnicity (Please select all that apply)</div>
+                <div id="ethnicity" class="control">
+                  <label class="checkbox">
+                    Black/Sub-Saharan African
+                    <input type='checkbox' name='ethnicity' value='African'>
+                  </label>
+                  <label class="checkbox">
+                    East or Southeast Asian
+                    <input type='checkbox' name='ethnicity' value='Asian'>
+                  </label>
+                  <label class="checkbox">
+                    European
+                    <input type='checkbox' name='ethnicity' value='European'>
+                  </label>
+                  <label class="checkbox">
+                    South Asian
+                    <input type='checkbox' name='ethnicity' value='SouthAsian'>
+                  </label>
+                  <label class="checkbox">
+                    Middle Eastern or North African
+                    <input type='checkbox' name='ethnicity' value='MidEastern'>
+                  </label>
+                  <label class="checkbox">
+                    Native American/First Nations
+                    <input type='checkbox' name='ethnicity' value='NativeAmerican'>
+                  </label>
+                  <label class="checkbox">
+                    Other
+                    <input type='checkbox' name='ethnicity' value='Other'>
+                  </label>
+                </div>
+              </div>
+              <div class="field">
+                <div class="label">Language (Unfortunately we can only translate the following languages)</div>
+                <div class="control">
+                  <div class="select">
+                    <select id="language">
+                      <option value='en'>English</option>
+                      <option value='ar'>Arabic</option>
+                      <option value='de'>German</option>
+                      <option value='es'>Spanish</option>
+                      <option value='fr'>French</option>
+                      <option value='it'>Italian</option>
+                      <option value='pt'>Portugese</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="field">
+                <div class="label">Gender</div>
+                <div class="control">
+                  <div class="select">
+                    <select id="gender">
+                      <option value='Male'>Male</option>
+                      <option value='Female'>Female</option>
+                      <option value='Other'>Other</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="field">
+                <div class="label">Sexual Orientation</div>
+                <div class="control">
+                  <div class="select">
+                    <select id="orientation">
+                      <option value='Male'>Attracted mainly to Males</option>
+                      <option value='Female'>Attracted mainly to Females</option>
+                      <option value='Bisexual'>Bisexual</option>
+                      <option value='Other'>Other</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="field">
+                <div class="label">Religion</div>
+                <div class="control">
+                  <div class="select">
+                    <select id="religion">
+                      <option value='Agnostic'>Agnostic</option>
+                      <option value='Atheist'>Atheist</option>
+                      <option value='Buddhist'>Buddhist</option>
+                      <option value='Christian'>Christian</option>
+                      <option value='Hindu'>Hindu</option>
+                      <option value='Jewish'>Jewish</option>
+                      <option value='Muslim'>Muslim</option>
+                      <option value='Other Faith'>Other Faith</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="field">
+                <div class="label">Age</div>
+                <div class="control">
+                  <input class="input" type="number" name="age" id="age" min="0" max="110" step="1" required>
+                </div>
+              </div>
+              <div class="field">
+                <div class="label">Twitter Account Name (If you have one)</div>
+                <div class="control">
+                  <input class="input" type="text" id="twitter">
+                </div>
+              </div>
               <br>
-              <input type="submit" name="Make a new account">
-              <input type="reset">
+              <div class="field is-grouped">
+                <div class="control">
+                  <input type="submit" class="button is-info is-outlined is-primary" name="Make a new account">
+                  <input type="reset" class="button is-info is-outlined is-light">
+                </div>
+              </div>
             </form>
           </div>
         </div>

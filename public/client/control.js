@@ -6,9 +6,6 @@ const peer = new Peer({
 	debug: 1,
 	logFunction: peerLog
 })
-
-let connections = {}
-
 const ethArr = [
 	'Black', 'East or Southeast Asian',
 	'European', 'South Asian',
@@ -16,32 +13,9 @@ const ethArr = [
 	'Native American/First Nations',
 	'Other'
 ]
-
-function enableFeatures() {
-	$('#connect').prop('disabled', true).text('Connection Found')
-	$('#close').removeProp('disabled').text('Close Connection') 
-	$('#text').removeProp('disabled')
-	$('#send').removeProp('disabled').val('Send Message')
-	$('#call').removeProp('disabled').text('Video Call')
-}
-
-function disableFeatures() {
-	$('#call').prop('disabled', true).text('Connect Before Calling')
-	$('#send').prop('disabled', true).val('Connect Before Messaging')
-	$('#text').prop('disabled', true)
-	$('#close').prop('disabled', true).text('No Connections to Close') 
-	$('#connect').removeProp('disabled').text('Connect')
-}
-
 function shutdown() {
-	disableFeatures()
-	Object.keys(connections).forEach((id) => {
-		if (connections[id].open)
-			connections[id].close()
-	})
-	connections = {}
+	disableChatFeatures(null)
 	peer.destroy()
-	$('#connect').prop('disabled', true).text('Please Refresh to Reconnect')
 }
 
 function fatalError(err) {
@@ -66,11 +40,9 @@ function findmatch() {
 				$('#connect').text('Please wait for a match')
 			else {
 				console.log('matched with ' + match.id)
-				if (!connections[match.id]) {
-					const conn = peer.connect(match.id)
-					conn.on('open', () => setUpChatbox(conn))
-					conn.on('error', fatalError)
-				}
+				const conn = peer.connect(match.id)
+				conn.on('open', () => setUpChatbox(conn))
+				conn.on('error', fatalError)
 			}
 		},
 		error: (err) => {
@@ -101,13 +73,14 @@ $(document).ready(function() {
 	})
 	// Set up chatbox for new chat participant.
 	peer.on('connection', (conn) => {
-		if (!connections[conn.peer]) {
-			conn.on('open', () => setUpChatbox(conn))
-			conn.on('error', fatalError)
-		}
+		conn.on('open', () => setUpChatbox(conn))
+		conn.on('error', (err) => {
+			conn.close()
+			fatalError(err)
+		})
 	})
 	//open a chat connection
-	$('#connect').on('click', (e) => {findmatch()})
+	$('#connect').on('click.connect', (e) => {findmatch()})
 })
 
 peer.on('close', shutdown)

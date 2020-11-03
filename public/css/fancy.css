@@ -72,9 +72,8 @@ input:focus {
   background-color: #ddd;
   border: 1px solid #ccc;
 }
-#close {
-  background-color: #FF7500;
-  border-color: #c15c06;
+form {
+  display: inline-block;
 }
 .important {
   font-size: 15px;
