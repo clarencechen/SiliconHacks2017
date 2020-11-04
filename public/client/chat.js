@@ -4,6 +4,7 @@ function setUpChatbox(conn) {
 	const peerid = conn.peer
 	// Take down chatbox for former participant.
 	conn.on('close', () => {
+		$('#call').trigger('click.hangup')
 		disableCallFeatures(peerid)
 		disableChatFeatures(peerid)
 	})
