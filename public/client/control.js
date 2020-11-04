@@ -81,6 +81,18 @@ $(document).ready(function() {
 	})
 	//open a chat connection
 	$('#connect').on('click.connect', (e) => {findmatch()})
+	$('#logout').on('click', (e) => {
+		$.ajax({
+			type: 'POST',
+			url: 'https://cit-i-zen.herokuapp.com:443/logout',
+			data: {},
+			success: (res) => {
+				shutdown()
+				window.location.replace("/")
+			},
+			error: console.error
+		})
+	})
 })
 
 peer.on('close', shutdown)
