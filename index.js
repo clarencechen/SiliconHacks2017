@@ -6,8 +6,18 @@ const express = require('express'),
 		session = require('express-session'),
 		pgSession = require('connect-pg-simple')(session)
 
-if (process.env.NODE_ENV === 'production')
+app.use(bodyParser.urlencoded({ extended: true }))
+app.use(bodyParser.json())
+
+if (process.env.NODE_ENV === 'production') {
 	app.set('trust proxy', 1)
+	app.use((req, res, next) => {
+		if (req.headers['x-forwarded-proto'] != 'https')
+			res.redirect(301, 'https://' + req.hostname + req.originalUrl)
+		else
+			next()
+	})
+}
 else
 	process.env = require('dotenv-safe').load().parsed
 
@@ -35,8 +45,6 @@ const sessionMiddleware = session({
 		// errorLog:
 	})
 })
-app.use(bodyParser.urlencoded({ extended: true }))
-app.use(bodyParser.json())
 app.use(sessionMiddleware)
 
 const routes = require('./api/routes/routes.js');
