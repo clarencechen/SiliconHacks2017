@@ -16,17 +16,22 @@
       <!-- Hero content: will be in the middle -->
       <div class="hero-body">
         <div class="container">
-          <div id="account" >
-            <p>Username</p>
-            <input class="input email-input" type="text" id="username" required>
-            <p>Password</p>
-            <input class="input password-input" type="password" id="password" required>
-            <button id="advance" class="button is-info is-outlined">Next</button>
-          </div>
           <div id="background">
             <h1>Please input background information here so we can match you appropriately</h1>
             <br>
             <form id="bginfo">
+              <div class="field">
+                <div class="label">Username</div>
+                <div class="control">
+                  <input class="input email-input" type="text" id="twitter" required>
+                </div>
+              </div>
+              <div class="field">
+                <div class="label">Password</div>
+                <div class="control">
+                  <input class="input password-input" type="password" id="password" required>
+                </div>
+              </div>
               <div class="field">
                 <div class="label">Ethnicity (Please select all that apply)</div>
                 <div id="ethnicity" class="control">
@@ -143,7 +148,6 @@
       </div>
     </section>
   <script>
-    $('#background').toggle()
     $('.removed').remove()
   </script>
   </body>
