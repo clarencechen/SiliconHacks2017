@@ -48,17 +48,24 @@
                   <div class="control">
                     <input disabled type="text" id="text" placeholder="Enter message">
                     <input disabled id="send" class="button" type="submit" value="Connect Before Messaging">
+                  </div>
                 </div>
               </form>
               <br>
               <div id="chatbox"></div>
             </div>
             <div id="video">
-              <video autoplay></video>
               <div class="actions">
-                <label class="checkbox">Audio Only<input type="checkbox" id="novideo"></label>
-                <label class="checkbox">Mute<input type="checkbox" id="mute"></label>
-                <p>Volume<input type="range" min="0" max="100" value="100" step="1" id="volume"></p>
+                <video id="localfeed" autoplay></video>
+                <div class="control">
+                  <label class="checkbox">No Camera<input class="videocontrol" type="checkbox" id="novideo"></label>
+                  <label class="checkbox">No Microphone<input class="videocontrol" type="checkbox" id="noaudio"></label>
+                </div>
+                <video id="remotefeed" autoplay></video>
+                <div class="control">
+                  <label class="checkbox">Mute<input class="videocontrol" type="checkbox" id="mute"></label>
+                  <p>Volume<input class="videocontrol" type="range" min="0" max="100" value="100" step="1" id="volume"></p>
+                </div>
                 <button disabled id="call" class="button">Connect Before Calling</button>
               </div>
             </div>
